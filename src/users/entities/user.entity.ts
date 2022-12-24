@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User_groups } from './user_group.entity';
 
 @Entity()
 export class Users {
@@ -19,4 +27,11 @@ export class Users {
 
   @Column()
   image: string;
+
+  @Column({ default: false })
+  issuperadmin: boolean;
+
+  @ManyToMany(() => User_groups)
+  @JoinTable()
+  user_groups: User_groups[];
 }
