@@ -1,10 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User_groups } from './user_group.entity';
 
@@ -16,11 +17,8 @@ export class Users {
   @Column()
   username: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
-
-  @Column()
-  role: string;
 
   @Column()
   password: string;
@@ -30,6 +28,12 @@ export class Users {
 
   @Column({ default: false })
   issuperadmin: boolean;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @ManyToMany(() => User_groups)
   @JoinTable()

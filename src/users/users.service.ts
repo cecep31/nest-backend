@@ -13,7 +13,12 @@ export class UsersService {
   ) {}
 
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return this.usersRepository.save(createUserDto);
+  }
+
+  update(id: number, updateUserDTO: UpdateUserDto) {
+    updateUserDTO.id = id;
+    return this.usersRepository.save(updateUserDTO);
   }
 
   findAll(): Promise<Users[]> {
