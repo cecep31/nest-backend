@@ -9,17 +9,21 @@ import { Users } from './users/entities/user.entity';
 import { Books } from './books/entities/book.entity';
 import { AuthModule } from './auth/auth.module';
 import { User_groups } from './users/entities/user_group.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     UsersModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '127.0.0.1',
+      host: process.env.DB_HOST,
       port: 5432,
-      username: 'pilput',
-      password: 'pilput31',
-      database: 'nestbackend',
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
       entities: [Users, Books, User_groups],
       synchronize: true,
       ssl: false,

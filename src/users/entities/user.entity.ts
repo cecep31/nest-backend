@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
@@ -15,6 +16,7 @@ export class Users {
   id: number;
 
   @Column()
+  @Index({ unique: true })
   username: string;
 
   @Column({ unique: true })
