@@ -16,7 +16,7 @@ export class UsersService {
     return this.usersRepository.save(createUserDto);
   }
 
-  update(id: number, updateUserDTO: UpdateUserDto) {
+  update(id: string, updateUserDTO: UpdateUserDto) {
     updateUserDTO.id = id;
     return this.usersRepository.save(updateUserDTO);
   }
@@ -29,7 +29,7 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username });
   }
 
-  findOne(id: number): Promise<Users> {
+  findOne(id: string): Promise<Users> {
     return this.usersRepository.findOneBy({ id });
   }
 

@@ -10,6 +10,8 @@ import { Books } from './books/entities/book.entity';
 import { AuthModule } from './auth/auth.module';
 import { User_groups } from './users/entities/user_group.entity';
 import { ConfigModule } from '@nestjs/config';
+import { TasksModule } from './tasks/tasks.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { ConfigModule } from '@nestjs/config';
     }),
     BooksModule,
     AuthModule,
+    TasksModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
