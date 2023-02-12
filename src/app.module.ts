@@ -12,6 +12,7 @@ import { User_groups } from './users/entities/user_group.entity';
 import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from './tasks/tasks.module';
 import { PostsModule } from './posts/posts.module';
+import { Task } from './tasks/entities/task.entity';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { PostsModule } from './posts/posts.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Books, User_groups],
+      entities: [Users, Books, User_groups, Task],
       synchronize: true,
       ssl: false,
     }),

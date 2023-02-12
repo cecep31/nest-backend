@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Request } from '@nestjs/common';
+import { Req } from '@nestjs/common/decorators';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 
@@ -14,7 +15,11 @@ export class AppController {
     return this.appService.getHello();
   }
   @Post('auth/login')
-  async login(@Request() req) {
-    return this.authservice.Login(req);
+  async login(@Req() req) {
+    const user = await this.authservice.validateUser(
+      req.body.username,
+      req.body.password,
+    );
+    return this.authservice.Login(user);
   }
 }
