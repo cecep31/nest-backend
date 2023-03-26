@@ -29,7 +29,7 @@ import { Task } from './tasks/entities/task.entity';
       database: process.env.DB_NAME,
       entities: [Users, Books, User_groups, Task],
       synchronize: true,
-      ssl: false,
+      ssl: true,
     }),
     BooksModule,
     AuthModule,

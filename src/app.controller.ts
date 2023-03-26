@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Request } from '@nestjs/common';
-import { Req } from '@nestjs/common/decorators';
+import { Req, Res } from '@nestjs/common/decorators';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 
@@ -20,6 +20,10 @@ export class AppController {
       req.body.username,
       req.body.password,
     );
-    return this.authservice.Login(user);
+    if (user) {
+      return this.authservice.Login(user);
+    } else {
+      return 'wkwkw';
+    }
   }
 }
