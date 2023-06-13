@@ -14,16 +14,5 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-  @Post('auth/login')
-  async login(@Req() req) {
-    const user = await this.authservice.validateUser(
-      req.body.username,
-      req.body.password,
-    );
-    if (user) {
-      return this.authservice.Login(user);
-    } else {
-      return 'wkwkw';
-    }
-  }
+  
 }

@@ -2,26 +2,27 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { User_groups } from './user_group.entity';
+} from "typeorm";
+import { User_groups } from "./user_group.entity";
 
 @Entity()
 export class Users {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
-
-  @Column()
-  @Index({ unique: true })
-  username: string;
 
   @Column({ unique: true })
   email: string;
 
+  @Column()
+  first_name: string;
+
+  @Column()
+  last_name: string;
+  
   @Column()
   password: string;
 
