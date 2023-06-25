@@ -13,6 +13,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from './tasks/tasks.module';
 import { PostsModule } from './posts/posts.module';
 import { Task } from './tasks/entities/task.entity';
+import { WorkspacesModule } from './workspaces/workspaces.module';
+import { Post } from './posts/entities/post.entity';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { Task } from './tasks/entities/task.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Books, User_groups, Task],
+      entities: [Users, Books, User_groups, Task, Post],
       synchronize: true,
       ssl: true,
     }),
@@ -35,6 +37,7 @@ import { Task } from './tasks/entities/task.entity';
     AuthModule,
     TasksModule,
     PostsModule,
+    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
