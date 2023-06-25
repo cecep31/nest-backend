@@ -28,5 +28,5 @@ export class Task {
 
   @OneToOne(() => Users)
   @JoinColumn()
-  user: Users;
+  created_by: Users;
 }

@@ -4,9 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { BooksModule } from './books/books.module';
 import { Users } from './users/entities/user.entity';
-import { Books } from './books/entities/book.entity';
 import { AuthModule } from './auth/auth.module';
 import { User_groups } from './users/entities/user_group.entity';
 import { ConfigModule } from '@nestjs/config';
@@ -15,6 +13,9 @@ import { PostsModule } from './posts/posts.module';
 import { Task } from './tasks/entities/task.entity';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { Post } from './posts/entities/post.entity';
+import { ProjectsModule } from './projects/projects.module';
+import { Workspace } from './workspaces/entities/workspace.entity';
+import { Project } from './projects/entities/project.entity';
 
 @Module({
   imports: [
@@ -29,15 +30,15 @@ import { Post } from './posts/entities/post.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Books, User_groups, Task, Post],
+      entities: [Users, User_groups, Task, Post, Workspace, Project],
       synchronize: true,
       ssl: true,
     }),
-    BooksModule,
     AuthModule,
     TasksModule,
     PostsModule,
     WorkspacesModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
