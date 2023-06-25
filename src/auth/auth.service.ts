@@ -1,13 +1,14 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { UsersService } from "src/users/users.service";
-import * as bcrypt from "bcrypt";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcrypt';
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   comparePassword(hash: string, password: string) {
@@ -31,6 +32,8 @@ export class AuthService {
   }
 
   async Login(user: any) {
+    
+    
     const payload = {
       username: user.username,
       sub: user.id,
