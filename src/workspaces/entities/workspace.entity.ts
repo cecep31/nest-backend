@@ -4,21 +4,23 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
 export class Workspace {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   title: string;
 
   @ManyToMany(() => Users)
-  @JoinColumn()
+  @JoinTable()
   members: Users[];
 
   @OneToMany(() => Project, (project) => project.workspace)
