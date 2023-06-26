@@ -1,6 +1,7 @@
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
-import { Column, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
+@Entity()
 export class Project {
   @PrimaryColumn('uuid')
   id: string;
