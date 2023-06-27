@@ -12,18 +12,18 @@ import { Users } from 'src/users/entities/user.entity';
 export class CreateWorkspaceDto {
   @IsEmpty()
   id?: string;
-  
+
   @IsNotEmpty()
   title: string;
 
-  //   @ArrayNotEmpty()
-  //   @IsArray()
-  //   @ValidateNested({ each: true })
+  @ArrayNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => Users)
   members: Users[];
 
-  //   @IsArray()
-  //   @ValidateNested({ each: true })
+  @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => Project)
   projects: Project[];
 }
