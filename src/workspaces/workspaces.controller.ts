@@ -21,6 +21,8 @@ export class WorkspacesController {
   @UseGuards(AuthGuard)
   @Post()
   create(@Body() createWorkspaceDto: CreateWorkspaceDto, @Request() req) {
+    console.log(createWorkspaceDto);
+    
     return this.workspacesService.create(createWorkspaceDto, req);
   }
 

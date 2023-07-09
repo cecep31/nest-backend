@@ -24,7 +24,10 @@ export class AuthService {
     if (!compare) {
       throw new UnauthorizedException();
     }
-    const payload = { id: user.id, username: user.email };
+    const payload = { 
+      id: user.id,
+      email: user.email,
+      issuperadmin: user.issuperadmin, };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
@@ -32,8 +35,8 @@ export class AuthService {
 
   async Login(user: any) {
     const payload = {
-      username: user.username,
-      sub: user.id,
+      email: user.username,
+      id: user.id,
       issuperadmin: user.issuperadmin,
     };
     return {

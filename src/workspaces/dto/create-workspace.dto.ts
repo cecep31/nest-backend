@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
 import {
-  ArrayNotEmpty,
   IsArray,
   IsEmpty,
   IsNotEmpty,
@@ -16,13 +15,15 @@ export class CreateWorkspaceDto {
   @IsNotEmpty()
   title: string;
 
-  @ArrayNotEmpty()
+  // @ArrayNotEmpty()
   @IsArray()
+  @IsEmpty({ each: true })
   @ValidateNested({ each: true })
   @Type(() => Users)
   members: Users[];
 
   @IsArray()
+  @IsEmpty({ each: true })
   @ValidateNested({ each: true })
   @Type(() => Project)
   projects: Project[];

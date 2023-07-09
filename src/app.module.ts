@@ -33,6 +33,7 @@ import { Project } from './projects/entities/project.entity';
       entities: [Users, User_groups, Task, Post, Workspace, Project],
       synchronize: true,
       ssl: true,
+      cache: true
     }),
     AuthModule,
     TasksModule,
