@@ -18,9 +18,14 @@ import { Workspace } from './workspaces/entities/workspace.entity';
 import { Project } from './projects/entities/project.entity';
 import { GrouptasksModule } from './grouptasks/grouptasks.module';
 import { Grouptask } from './grouptasks/entities/grouptask.entity';
+import { Throttle, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
     UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -35,7 +40,7 @@ import { Grouptask } from './grouptasks/entities/grouptask.entity';
       entities: [Users, User_groups, Task, Post, Workspace, Project, Grouptask],
       synchronize: true,
       ssl: true,
-      cache: true
+      cache: true,
     }),
     AuthModule,
     TasksModule,
