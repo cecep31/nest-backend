@@ -16,6 +16,8 @@ import { Post } from './posts/entities/post.entity';
 import { ProjectsModule } from './projects/projects.module';
 import { Workspace } from './workspaces/entities/workspace.entity';
 import { Project } from './projects/entities/project.entity';
+import { GrouptasksModule } from './grouptasks/grouptasks.module';
+import { Grouptask } from './grouptasks/entities/grouptask.entity';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { Project } from './projects/entities/project.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, User_groups, Task, Post, Workspace, Project],
+      entities: [Users, User_groups, Task, Post, Workspace, Project, Grouptask],
       synchronize: true,
       ssl: true,
       cache: true
@@ -40,6 +42,7 @@ import { Project } from './projects/entities/project.entity';
     PostsModule,
     WorkspacesModule,
     ProjectsModule,
+    GrouptasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
