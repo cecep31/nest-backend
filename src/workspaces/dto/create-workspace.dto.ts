@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { Project } from 'src/projects/entities/project.entity';
 import { Users } from 'src/users/entities/user.entity';
+import { CreateDateColumn } from 'typeorm';
 
 export class CreateWorkspaceDto {
   @IsEmpty()
@@ -15,16 +16,17 @@ export class CreateWorkspaceDto {
   @IsNotEmpty()
   title: string;
 
-  // @ArrayNotEmpty()
-  @IsArray()
+ 
   @IsEmpty({ each: true })
   @ValidateNested({ each: true })
   @Type(() => Users)
   members: Users[];
 
-  @IsArray()
   @IsEmpty({ each: true })
   @ValidateNested({ each: true })
   @Type(() => Project)
   projects: Project[];
+
+  @CreateDateColumn()
+  createdAt: Date
 }

@@ -34,4 +34,6 @@ export class Task {
 
   @ManyToOne(() => Grouptask,(grouptask) => grouptask.tasks)
   grouptask: Grouptask
+
+  
 }

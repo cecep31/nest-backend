@@ -21,7 +21,9 @@ export class WorkspacesService {
   }
 
   findAll() {
-    return this.WorkspaceRepository.find({ relations: { members: true } });
+    return this.WorkspaceRepository.find({
+      relations: { members: true, projets: true },
+    });
   }
 
   findOne(id: number) {
