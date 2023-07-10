@@ -2,16 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { User_groups } from "./user_group.entity";
+} from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class Users {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ unique: true })
@@ -22,7 +20,8 @@ export class Users {
 
   @Column()
   last_name: string;
-  
+
+  @Exclude()
   @Column()
   password: string;
 
@@ -38,7 +37,8 @@ export class Users {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToMany(() => User_groups)
-  @JoinTable()
-  user_groups: User_groups[];
+  @Expose()
+  fullName(): string {
+    return `${this.first_name} ${this.last_name}`;
+  }
 }
