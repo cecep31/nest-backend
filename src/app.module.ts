@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Users } from './users/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { User_groups } from './users/entities/user_group.entity';
 import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from './tasks/tasks.module';
 import { PostsModule } from './posts/posts.module';
@@ -18,7 +17,7 @@ import { Workspace } from './workspaces/entities/workspace.entity';
 import { Project } from './projects/entities/project.entity';
 import { GrouptasksModule } from './grouptasks/grouptasks.module';
 import { Grouptask } from './grouptasks/entities/grouptask.entity';
-import { Throttle, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -37,7 +36,7 @@ import { Throttle, ThrottlerModule } from '@nestjs/throttler';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, User_groups, Task, Post, Workspace, Project, Grouptask],
+      entities: [Users, Task, Post, Workspace, Project, Grouptask],
       synchronize: true,
       ssl: true,
       cache: true,

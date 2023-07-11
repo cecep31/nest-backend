@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -35,5 +36,7 @@ export class Task {
   @ManyToOne(() => Grouptask,(grouptask) => grouptask.tasks)
   grouptask: Grouptask
 
+  @DeleteDateColumn()
+  Deleted_at: Date;
   
 }

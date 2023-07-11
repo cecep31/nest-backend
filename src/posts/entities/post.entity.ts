@@ -1,5 +1,5 @@
 import { Users } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Post {
@@ -15,4 +15,13 @@ export class Post {
   @OneToOne(() => Users)
   @JoinColumn()
   createBy: Users;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @DeleteDateColumn()
+  Deleted_at: Date;
 }

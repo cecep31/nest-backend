@@ -23,15 +23,16 @@ export class PostsService {
     return this.postRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  findOne(id: string) {
+    return this.postRepository.findOne({ where: { id: id } });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  update(id: string, updatePostDto: UpdatePostDto) {
+    updatePostDto.id = id;
+    return this.postRepository.save(updatePostDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  remove(id: string) {
+    return this.postRepository.softDelete(id);
   }
 }

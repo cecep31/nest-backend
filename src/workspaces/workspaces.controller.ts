@@ -10,6 +10,7 @@ import {
   Request,
   UseInterceptors,
   ClassSerializerInterceptor,
+  NotFoundException,
 } from '@nestjs/common';
 import { WorkspacesService } from './workspaces.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
@@ -22,9 +23,7 @@ export class WorkspacesController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createWorkspaceDto: CreateWorkspaceDto, @Request() req) {
-    console.log(createWorkspaceDto);
-    
+  create(@Body() createWorkspaceDto: CreateWorkspaceDto, @Request() req: any) {
     return this.workspacesService.create(createWorkspaceDto, req);
   }
 
@@ -34,9 +33,14 @@ export class WorkspacesController {
     return this.workspacesService.findAll();
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.workspacesService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const result = await this.workspacesService.findById(id);
+    if (!result) {
+      throw new NotFoundException('Not Found');
+    }
+    return result;
   }
 
   @Patch(':id')
@@ -44,11 +48,11 @@ export class WorkspacesController {
     @Param('id') id: string,
     @Body() updateWorkspaceDto: UpdateWorkspaceDto,
   ) {
-    return this.workspacesService.update(+id, updateWorkspaceDto);
+    return this.workspacesService.update(id, updateWorkspaceDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.workspacesService.remove(+id);
+    return this.workspacesService.remove(id);
   }
 }

@@ -19,15 +19,16 @@ export class TasksService {
     return this.taskRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  findOne(id: string) {
+    return this.taskRepository.findOne({ where: { id: id } });
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  update(id: string, updateTaskDto: UpdateTaskDto) {
+    updateTaskDto.id = id;
+    return this.taskRepository.save(updateTaskDto);
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} task`;
   }
 }

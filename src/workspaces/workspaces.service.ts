@@ -32,15 +32,21 @@ export class WorkspacesService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} workspace`;
+  findById(id: string) {
+    return this.WorkspaceRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: { members: true, projets: true },
+    });
   }
 
-  update(id: number, updateWorkspaceDto: UpdateWorkspaceDto) {
-    return `This action updates a #${id} workspace`;
+  update(id: string, updateWorkspaceDto: UpdateWorkspaceDto) {
+    updateWorkspaceDto.id = id;
+    return this.WorkspaceRepository.save(updateWorkspaceDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} workspace`;
+  remove(id: string) {
+    return this.WorkspaceRepository.softDelete({ id: id });
   }
 }
