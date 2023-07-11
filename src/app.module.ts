@@ -25,7 +25,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       ttl: 60,
       limit: 10,
     }),
-    UsersModule,
+    
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -41,6 +41,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       ssl: true,
       cache: true,
     }),
+    UsersModule,
     AuthModule,
     TasksModule,
     PostsModule,
