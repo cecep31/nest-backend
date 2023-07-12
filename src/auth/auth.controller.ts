@@ -7,6 +7,8 @@ import {
   Post,
   Request,
   UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
@@ -22,8 +24,9 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user;
+    return this.authService.profile(req.user);
   }
 }

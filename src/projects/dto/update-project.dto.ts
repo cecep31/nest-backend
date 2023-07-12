@@ -1,4 +1,12 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateProjectDto } from './create-project.dto';
+import { IsNotEmpty, IsNotEmptyObject } from 'class-validator';
+import { Workspace } from 'src/workspaces/entities/workspace.entity';
 
-export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
+export class UpdateProjectDto {
+  id?: string;
+
+  @IsNotEmpty()
+  title: string;
+
+  @IsNotEmptyObject()
+  workspace: Workspace;
+}

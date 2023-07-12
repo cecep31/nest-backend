@@ -1,4 +1,14 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateGrouptaskDto } from './create-grouptask.dto';
+import { Project } from 'src/projects/entities/project.entity';
+import { Task } from 'src/tasks/entities/task.entity';
 
-export class UpdateGrouptaskDto extends PartialType(CreateGrouptaskDto) {}
+export class UpdateGrouptaskDto {
+  id?: string;
+
+  name: string;
+
+  order: string;
+
+  tasks: Task[];
+
+  project: Project;
+}

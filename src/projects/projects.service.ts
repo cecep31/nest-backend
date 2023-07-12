@@ -21,14 +21,15 @@ export class ProjectsService {
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} project`;
+    return this.projectRepository.findOne({ where: { id: id } });
   }
 
   update(id: string, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+    updateProjectDto.id = id;
+    return this.projectRepository.save(updateProjectDto);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} project`;
+    return this.projectRepository.softDelete(id);
   }
 }

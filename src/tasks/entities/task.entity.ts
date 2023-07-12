@@ -23,6 +23,9 @@ export class Task {
   @Column()
   desc: string;
 
+  @Column()
+  order: number;
+
   @CreateDateColumn()
   created_at: Date;
 

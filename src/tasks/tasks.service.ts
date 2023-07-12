@@ -29,6 +29,6 @@ export class TasksService {
   }
 
   remove(id: string) {
-    return `This action removes a #${id} task`;
+    return this.taskRepository.softDelete(id);
   }
 }

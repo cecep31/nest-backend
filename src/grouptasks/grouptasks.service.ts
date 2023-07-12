@@ -7,11 +7,13 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class GrouptasksService {
-
-  constructor(@InjectRepository(Grouptask) private grouptaskRepository: Repository<Grouptask>){}
+  constructor(
+    @InjectRepository(Grouptask)
+    private grouptaskRepository: Repository<Grouptask>,
+  ) {}
 
   create(createGrouptaskDto: CreateGrouptaskDto) {
-    return 'This action adds a new grouptask';
+    return this.grouptaskRepository.save(createGrouptaskDto);
   }
 
   findAll() {
@@ -19,16 +21,19 @@ export class GrouptasksService {
   }
 
   findOne(id: string) {
-    return this.grouptaskRepository.findOne({where:{
-      id: id
-    }});
+    return this.grouptaskRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
 
   update(id: string, updateGrouptaskDto: UpdateGrouptaskDto) {
-    return `This action updates a #${id} grouptask`;
+    updateGrouptaskDto.id = id;
+    return this.grouptaskRepository.save(updateGrouptaskDto);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} grouptask`;
+    return this.grouptaskRepository.softDelete(id);
   }
 }

@@ -1,4 +1,18 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTaskDto } from './create-task.dto';
+import { Users } from 'src/users/entities/user.entity';
+import { Grouptask } from 'src/grouptasks/entities/grouptask.entity';
+import { IsNotEmpty } from 'class-validator';
 
-export class UpdateTaskDto extends PartialType(CreateTaskDto) {}
+export class UpdateTaskDto {
+  id?: string;
+
+  @IsNotEmpty()
+  title: string;
+
+  desc: string;
+
+  order: number;
+
+  created_by?: Users;
+
+  grouptask: Grouptask;
+}

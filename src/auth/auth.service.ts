@@ -24,10 +24,11 @@ export class AuthService {
     if (!compare) {
       throw new UnauthorizedException();
     }
-    const payload = { 
+    const payload = {
       id: user.id,
       email: user.email,
-      issuperadmin: user.issuperadmin, };
+      issuperadmin: user.issuperadmin,
+    };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
@@ -42,5 +43,9 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  profile(user: any) {
+    return this.userService.findOne(user.id);
   }
 }
