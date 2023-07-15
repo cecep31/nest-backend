@@ -5,14 +5,15 @@ import {
   Body,
   Patch,
   Param,
+  Req,
   Delete,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import {Request} from 'express'
 
 @Controller('posts')
 export class PostsController {
@@ -20,13 +21,13 @@ export class PostsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createPostDto: CreatePostDto, @Request() req: any) {
+  create(@Body() createPostDto: CreatePostDto, @Req() req: any) {
     return this.postsService.create(createPostDto, req);
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Req() req: Request) {
+    return this.postsService.findAll(req);
   }
 
   @Get(':id')

@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
+import { Post } from 'src/posts/entities/post.entity';
 
 @Entity()
 export class Users {
@@ -36,6 +38,9 @@ export class Users {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => Post, (post) => post.createBy)
+  posts: Post[]
 
   @Expose()
   fullName(): string {

@@ -1,5 +1,13 @@
 import { Users } from 'src/users/entities/user.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Post {
@@ -9,11 +17,10 @@ export class Post {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ type: 'text', default: "-"})
   body: string;
 
-  @OneToOne(() => Users)
-  @JoinColumn()
+  @ManyToOne(() => Users, (user) => user.posts)
   createBy: Users;
 
   @CreateDateColumn()
