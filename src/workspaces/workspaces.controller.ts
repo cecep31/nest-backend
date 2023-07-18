@@ -1,13 +1,13 @@
 import {
   Controller,
   Get,
+  Req,
   Post,
   Body,
   Patch,
   Param,
   Delete,
   UseGuards,
-  Request,
   UseInterceptors,
   ClassSerializerInterceptor,
   NotFoundException,
@@ -16,6 +16,7 @@ import { WorkspacesService } from './workspaces.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import {Request} from 'express'
 
 @Controller('workspaces')
 export class WorkspacesController {
@@ -23,14 +24,15 @@ export class WorkspacesController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createWorkspaceDto: CreateWorkspaceDto, @Request() req: any) {
+  create(@Body() createWorkspaceDto: CreateWorkspaceDto, @Req() req: any) {
     return this.workspacesService.create(createWorkspaceDto, req);
   }
 
+  @UseGuards(AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.workspacesService.findAll();
+  findAll(@Req() req) {
+    return this.workspacesService.findMyWorkspaces(req.user.id)
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

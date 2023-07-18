@@ -6,7 +6,6 @@ import { Post } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
 import { Request } from 'express';
-import { log } from 'console';
 
 @Injectable()
 export class PostsService {

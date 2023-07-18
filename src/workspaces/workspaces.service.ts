@@ -21,14 +21,15 @@ export class WorkspacesService {
   }
 
   findAll() {
-    const page = 1; // The desired page number
-    const pageSize = 10; // The number of records per page
-    const skip = (page - 1) * pageSize; // Calculate the number of records to skip
-
     return this.WorkspaceRepository.find({
       relations: { members: true, projets: true },
-      skip: skip,
-      take: pageSize,
+    });
+  }
+
+  findMyWorkspaces(id: string) {
+    return this.WorkspaceRepository.find({
+      where: { members: { id } },
+      relations: { members: true },
     });
   }
 
