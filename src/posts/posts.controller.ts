@@ -14,12 +14,13 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import {Request} from 'express'
+import { SupeAdminGuard } from 'src/auth/superadmin.guard';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard,SupeAdminGuard)
   @Post()
   create(@Body() createPostDto: CreatePostDto, @Req() req: any) {
     return this.postsService.create(createPostDto, req);
@@ -40,6 +41,7 @@ export class PostsController {
     return this.postsService.update(id, updatePostDto);
   }
 
+  @UseGuards(AuthGuard,SupeAdminGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.postsService.remove(id);
