@@ -18,6 +18,8 @@ import { Project } from './projects/entities/project.entity';
 import { GrouptasksModule } from './grouptasks/grouptasks.module';
 import { Grouptask } from './grouptasks/entities/grouptask.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { NotificationsModule } from './notifications/notifications.module';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: 'cockroachdb',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USER,
@@ -48,6 +50,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
     WorkspacesModule,
     ProjectsModule,
     GrouptasksModule,
+    NotificationsModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
