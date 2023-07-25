@@ -21,6 +21,8 @@ export class ChatsGateway
   @WebSocketServer()
   server: Server;
 
+  connectedClients: Map<string, Socket> = new Map();
+
   @SubscribeMessage('sendMessage')
   async handleSendMessage(
     client: Socket,
@@ -36,13 +38,13 @@ export class ChatsGateway
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Disconnected: ${client.id}`);
-    //Do stuffs
+    this.connectedClients.set(client.id, client);
+    console.log(`Client connected: ${client.id}`);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log(`Connected ${client.id}`);
-    //Do stuffs
+    this.connectedClients.delete(client.id);
+    console.log(`Client disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('createChat')
