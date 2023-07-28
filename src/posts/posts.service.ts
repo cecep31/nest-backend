@@ -40,6 +40,9 @@ export class PostsService {
   findOne(id: string) {
     return this.postRepository.findOne({ where: { id: id } });
   }
+  findOnebyslug(slug: string) {
+    return this.postRepository.findOne({ where: { slug: slug } });
+  }
 
   update(id: string, updatePostDto: UpdatePostDto) {
     updatePostDto.id = id;
