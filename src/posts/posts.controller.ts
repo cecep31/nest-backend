@@ -32,7 +32,7 @@ export class PostsController {
   }
 
   @Get(':slug')
-  findOne(@Param('id') slug: string) {
+  findOne(@Param('slug') slug: string) {
     return this.postsService.findOnebyslug(slug);
   }
 
