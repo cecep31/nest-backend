@@ -17,7 +17,10 @@ export class Post {
   @Column()
   title: string;
 
-  @Column({ type: 'text', default: "-"})
+  @Column({ unique: true })
+  slug: string;
+
+  @Column({ type: 'text', default: '-' })
   body: string;
 
   @ManyToOne(() => Users, (user) => user.posts)
