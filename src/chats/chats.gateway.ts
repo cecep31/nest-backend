@@ -3,7 +3,6 @@ import {
   SubscribeMessage,
   MessageBody,
   WebSocketServer,
-  OnGatewayInit,
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
@@ -11,13 +10,12 @@ import { ChatsService } from './chats.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Server, Socket } from 'socket.io';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { WsAuthGuard } from 'src/auth/wsauth.guard';
 
 @WebSocketGateway({ cors: '*', namespace: 'chat' })
 export class ChatsGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+  implements OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(private readonly chatsService: ChatsService) {}
 
@@ -37,9 +35,6 @@ export class ChatsGateway
     this.server.emit('recMessage', createChatDto);
   }
 
-  afterInit(server: Server) {
-    console.log(server);
-  }
 
   handleDisconnect(client: Socket) {
     this.connectedClients.delete(client.id);
