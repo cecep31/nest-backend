@@ -5,9 +5,11 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment_post } from './commentpost.entity';
 
 @Entity()
 export class Post {
@@ -25,6 +27,9 @@ export class Post {
 
   @ManyToOne(() => Users, (user) => user.posts)
   createBy: Users;
+
+  @OneToMany(() => Comment_post, (comment_post) => comment_post.post)
+  comments: Comment_post[];
 
   @CreateDateColumn()
   created_at: Date;

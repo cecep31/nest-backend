@@ -20,6 +20,7 @@ import { Grouptask } from './grouptasks/entities/grouptask.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ChatsModule } from './chats/chats.module';
+import { Comment_post } from './posts/entities/commentpost.entity';
 
 @Module({
   imports: [
@@ -38,7 +39,7 @@ import { ChatsModule } from './chats/chats.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Task, Post, Workspace, Project, Grouptask],
+      entities: [Users, Task, Post, Workspace, Project, Grouptask, Comment_post],
       synchronize: true,
       ssl: true,
       cache: true,

@@ -6,11 +6,14 @@ import { Post } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
 import { Request } from 'express';
+import { Comment_post } from './entities/commentpost.entity';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(Comment_post)
+    private commentPostRepository: Repository<Comment_post>,
   ) {}
 
   create(createPostDto: CreatePostDto, req: any) {
@@ -51,5 +54,9 @@ export class PostsService {
 
   remove(id: string) {
     return this.postRepository.softDelete(id);
+  }
+
+  commentCreate(data: any) {
+    return this.commentPostRepository.save(data);
   }
 }
