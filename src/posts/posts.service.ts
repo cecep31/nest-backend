@@ -59,4 +59,10 @@ export class PostsService {
   commentCreate(data: any) {
     return this.commentPostRepository.save(data);
   }
+  getAllcomment(post_id: string) {
+    return this.commentPostRepository.find({
+      where: { post: { id: post_id } },
+      order: { created_at: 'DESC' },
+    });
+  }
 }
