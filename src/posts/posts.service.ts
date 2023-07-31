@@ -61,7 +61,7 @@ export class PostsService {
   }
   getAllcomment(post_id: string) {
     return this.commentPostRepository.find({
-      where: { post: { id: post_id } },
+      where: { post: { id: post_id }, parentCommentId: null },relations: {replies:true},
       order: { created_at: 'DESC' },
     });
   }
