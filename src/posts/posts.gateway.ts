@@ -9,7 +9,7 @@ import { PostsService } from './posts.service';
 
 @WebSocketGateway({ namespace: 'posts', cors: true })
 export class PostsGateway implements OnGatewayConnection {
-  constructor(private postservice: PostsService) {}
+  constructor(private postservice: PostsService) { }
   @WebSocketServer()
   server: Server;
 
