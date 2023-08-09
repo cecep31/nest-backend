@@ -41,7 +41,7 @@ import { Comment_post } from './posts/entities/commentpost.entity';
       database: process.env.DB_NAME,
       entities: [Users, Task, Post, Workspace, Project, Grouptask, Comment_post],
       synchronize: true,
-      ssl: true,
+      ssl: false,
       cache: true,
     }),
     UsersModule,
