@@ -18,7 +18,7 @@ import { SupeAdminGuard } from 'src/auth/superadmin.guard';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(private readonly postsService: PostsService) { }
 
   @UseGuards(AuthGuard, SupeAdminGuard)
   @Post()
@@ -28,6 +28,10 @@ export class PostsController {
 
   @Get()
   findAll(@Req() req: Request) {
+    if (req.query.random) {
+      console.log("masuk random");
+      return this.postsService.findRandomPost();
+    }
     return this.postsService.findAll(req);
   }
 

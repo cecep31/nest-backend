@@ -43,6 +43,7 @@ import { Comment_post } from './posts/entities/commentpost.entity';
       synchronize: true,
       ssl: false,
       cache: true,
+      // logging: true,
     }),
     UsersModule,
     AuthModule,

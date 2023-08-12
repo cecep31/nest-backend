@@ -14,7 +14,7 @@ export class PostsService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
     @InjectRepository(Comment_post)
     private commentPostRepository: Repository<Comment_post>,
-  ) {}
+  ) { }
 
   create(createPostDto: CreatePostDto, req: any) {
     const creator = new Users();
@@ -61,8 +61,12 @@ export class PostsService {
   }
   getAllcomment(post_id: string) {
     return this.commentPostRepository.find({
-      where: { post: { id: post_id }, parentCommentId: null },relations: {replies:true},
+      where: { post: { id: post_id }, parentCommentId: null }, relations: { replies: true },
       order: { created_at: 'DESC' },
     });
+  }
+  async findRandomPost() {
+    const data = await this.postRepository.createQueryBuilder("post").select().orderBy("RANDOM()").take(5).getMany();
+    return data;
   }
 }
