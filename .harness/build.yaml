@@ -1,0 +1,15 @@
+version: 1
+kind: pipeline
+spec:
+  stages:
+    - name: build
+      type: ci
+      spec:
+        steps:
+          - name: build
+            type: run
+            spec:
+              container: node:lts-alpine
+              script: 
+                - npm i
+                - npm run build
