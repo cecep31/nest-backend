@@ -9,7 +9,7 @@ datasource db {
 
 model post_comments {
   id                  String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at          DateTime?      @db.Timestamptz(6)
+  created_at          DateTime?      @default(now())
   updated_at          DateTime?      @db.Timestamptz(6)
   deleted_at          DateTime?      @db.Timestamptz(6)
   text                String?

@@ -4,7 +4,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 // import { Repository } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
 // import { Comment_post } from './entities/commentpost.entity';
-import { Prisma, posts } from "@prisma/client";
+import { Prisma, posts, post_comments } from "@prisma/client";
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -41,7 +41,7 @@ export class PostsService {
   commentCreate(data: any) {
     return this.prisma.post_comments.create({ data: data });
   }
-  getAllcomment(post_id: string) {
+  getAllcomment(post_id: string): Promise<post_comments[]> {
     return this.prisma.post_comments.findMany({
       where: { post_id: post_id, parrent_comment_id: null },
       orderBy: { created_at: "desc" }
