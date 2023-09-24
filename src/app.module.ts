@@ -18,8 +18,6 @@ import { Project } from './projects/entities/project.entity';
 import { GrouptasksModule } from './grouptasks/grouptasks.module';
 import { Grouptask } from './grouptasks/entities/grouptask.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { NotificationsModule } from './notifications/notifications.module';
-import { ChatsModule } from './chats/chats.module';
 import { Comment_post } from './posts/entities/commentpost.entity';
 import { PrismaService } from './prisma.service';
 
@@ -53,8 +51,6 @@ import { PrismaService } from './prisma.service';
     WorkspacesModule,
     ProjectsModule,
     GrouptasksModule,
-    NotificationsModule,
-    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService,PrismaService],
