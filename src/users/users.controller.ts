@@ -6,13 +6,11 @@ import {
   Param,
   Delete,
   UseGuards,
-  Put,
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SupeAdminGuard } from 'src/auth/superadmin.guard';
 
@@ -27,11 +25,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
-  }
+  // @UseGuards(AuthGuard)
+  // @Put(':id')
+  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  //   return this.usersService.update(id, updateUserDto);
+  // }
 
   @UseGuards(AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)

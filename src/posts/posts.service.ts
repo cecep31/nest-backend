@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
-// import { Comment_post } from './entities/commentpost.entity';
 import { Prisma, posts, post_comments } from "@prisma/client";
 import { PrismaService } from 'src/prisma.service';
 
