@@ -9,7 +9,7 @@ spec:
           - name: build
             type: run
             spec:
-              container: nodejs:lts-alpine
+              container: node:lts-alpine
               script: 
                 - npm i
                 - npm run build
