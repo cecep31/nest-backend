@@ -10,4 +10,4 @@ spec:
             type: run
             spec:
               container: alpine
-              script: ls
+              script: npm i
