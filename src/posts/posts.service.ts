@@ -44,7 +44,7 @@ export class PostsService {
   getAllcomment(post_id: string) {
     return this.prisma.post_comments.findMany({
       where: { post_id: post_id, parrent_comment_id: null },
-      orderBy: { created_at: 'desc' },
+      orderBy: { created_at: "desc" }
     });
   }
 
