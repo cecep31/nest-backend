@@ -23,7 +23,7 @@ export class PostsGateway implements OnGatewayConnection {
   @SubscribeMessage('sendComment')
   async handleMessage(client: Socket, payload: any) {
     const post_id = client.handshake.query.post_id + '';
-    payload.post = { id: post_id };
+    payload.post_id = post_id;
     await this.postservice.commentCreate(payload);
     const data = await this.postservice.getAllcomment(post_id);
     this.server.to(post_id).emit('newComment', data);

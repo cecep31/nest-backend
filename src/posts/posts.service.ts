@@ -4,7 +4,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 // import { Repository } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
 // import { Comment_post } from './entities/commentpost.entity';
-import { Prisma,posts } from "@prisma/client";
+import { Prisma, posts } from "@prisma/client";
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class PostsService {
     private prisma: PrismaService
   ) { }
 
-  
+
   async posts(params: {
     skip?: number;
     take?: number;
@@ -39,7 +39,7 @@ export class PostsService {
   }
 
   commentCreate(data: any) {
-    return this.prisma.post_comments.create(data);
+    return this.prisma.post_comments.create({ data: data });
   }
   getAllcomment(post_id: string) {
     return this.prisma.post_comments.findMany({
