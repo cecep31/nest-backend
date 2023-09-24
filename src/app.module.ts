@@ -21,6 +21,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ChatsModule } from './chats/chats.module';
 import { Comment_post } from './posts/entities/commentpost.entity';
+import { PrismaService } from './prisma.service';
 
 @Module({
   imports: [
@@ -34,13 +35,13 @@ import { Comment_post } from './posts/entities/commentpost.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
+      host: process.env["DB_HOST"],
+      port: parseInt(process.env["DB_PORT"]),
+      username: process.env["DB_USER"],
+      password: process.env["DB_PASS"],
+      database: process.env["DB_NAME"],
       entities: [Users, Task, Post, Workspace, Project, Grouptask, Comment_post],
-      synchronize: true,
+      synchronize: false,
       ssl: false,
       cache: true,
       // logging: true,
@@ -56,7 +57,7 @@ import { Comment_post } from './posts/entities/commentpost.entity';
     ChatsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,PrismaService],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

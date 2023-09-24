@@ -3,18 +3,14 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
   Req,
-  Delete,
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { Request } from 'express';
 import { SupeAdminGuard } from 'src/auth/superadmin.guard';
+import {posts as PostModel} from '@prisma/client'
 
 @Controller('posts')
 export class PostsController {
@@ -27,27 +23,9 @@ export class PostsController {
   }
 
   @Get()
-  findAll(@Req() req: Request) {
-    if (req.query.random) {
-      console.log("masuk random");
-      return this.postsService.findRandomPost();
-    }
-    return this.postsService.findAll(req);
+  async findAll() : Promise<PostModel[]> {
+    return this.postsService.posts({});
   }
 
-  @Get(':slug')
-  findOne(@Param('slug') slug: string) {
-    return this.postsService.findOnebyslug(slug);
-  }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(id, updatePostDto);
-  }
-
-  @UseGuards(AuthGuard, SupeAdminGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(id);
-  }
 }
