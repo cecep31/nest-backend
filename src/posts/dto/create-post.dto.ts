@@ -1,5 +1,4 @@
 import { IsNotEmpty } from 'class-validator';
-import { Users } from 'src/users/entities/user.entity';
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -11,5 +10,4 @@ export class CreatePostDto {
   @IsNotEmpty()
   body: string;
 
-  createBy: Users;
 }

@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { Users } from 'src/users/entities/user.entity';
 import { Prisma, posts, post_comments } from "@prisma/client";
 import { PrismaService } from 'src/prisma.service';
 
@@ -28,12 +26,6 @@ export class PostsService {
     });
   }
 
-  create(createPostDto: CreatePostDto, req: any) {
-    const creator = new Users();
-    creator.id = req.user.id;
-    createPostDto.createBy = creator;
-    return null;
-  }
 
   commentCreate(data: any) {
     return this.prisma.post_comments.create({ data: data });
