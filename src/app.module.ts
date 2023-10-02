@@ -11,8 +11,8 @@ import { PrismaService } from './prisma.service';
 @Module({
   imports: [
     ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
+      ttl: 60000,
+      limit: 20,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
