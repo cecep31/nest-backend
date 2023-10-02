@@ -18,7 +18,19 @@ import { LoggerModule } from 'nestjs-pino';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    LoggerModule.forRoot(),
+    LoggerModule.forRoot(
+      {
+        pinoHttp: {
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              singleLine: true,
+            },
+  
+          },
+        },
+      }
+    ),
     UsersModule,
     AuthModule,
     PostsModule,
