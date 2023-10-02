@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PostsModule } from './posts/posts.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaService } from './prisma.service';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PrismaService } from './prisma.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    LoggerModule.forRoot(),
     UsersModule,
     AuthModule,
     PostsModule,
