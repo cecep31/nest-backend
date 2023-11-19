@@ -26,7 +26,7 @@ import { LoggerModule } from 'nestjs-pino';
             options: {
               singleLine: true,
             },
-  
+
           },
         },
       }

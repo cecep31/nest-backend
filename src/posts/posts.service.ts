@@ -41,4 +41,8 @@ export class PostsService {
     });
   }
 
+  deletePost(post_id: string) {
+    return this.prisma.posts.delete({ where: { id: post_id } });
+  }
+
 }
