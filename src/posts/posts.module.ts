@@ -6,6 +6,6 @@ import { PostsGateway } from './posts.gateway';
 @Module({
   // imports: [PostsService],
   controllers: [PostsController],
-  providers: [PostsService,PrismaService,PostsGateway],
+  providers: [PostsService, PrismaService, PostsGateway],
 })
-export class PostsModule {}
+export class PostsModule { }

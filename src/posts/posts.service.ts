@@ -30,6 +30,8 @@ export class PostsService {
     return this.prisma.posts.findUnique({ where: { id: id } })
   }
 
+  
+
   commentCreate(data: any) {
     return this.prisma.post_comments.create({ data: data });
   }
@@ -43,6 +45,11 @@ export class PostsService {
 
   deletePost(post_id: string) {
     return this.prisma.posts.delete({ where: { id: post_id } });
+  }
+
+  createPost(post: any){
+    const newpost = this.prisma.posts.create({data: post})
+    return newpost
   }
 
 }
