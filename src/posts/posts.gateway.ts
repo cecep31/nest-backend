@@ -13,6 +13,11 @@ export class PostsGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
 
+  /**
+   * Handles a new connection from a client.
+   * Joins the client to a specific post room and emits the existing comments for that post.
+   * @param client The socket client object representing the connection.
+   */
   async handleConnection(client: Socket) {
     const post_id = client.handshake.query.post_id + '';
     client.join(post_id);
@@ -21,6 +26,11 @@ export class PostsGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('sendComment')
+  /**
+   * Handles incoming messages from clients.
+   * @param client - The socket client.
+   * @param payload - The payload of the message.
+   */
   async handleMessage(client: Socket, payload: any) {
     const post_id = client.handshake.query.post_id + '';
     payload.post_id = post_id;

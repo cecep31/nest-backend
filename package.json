@@ -27,6 +27,7 @@
     "@nestjs/jwt": "^10.1.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.1.0",
+    "@nestjs/platform-fastify": "^10.3.0",
     "@nestjs/platform-socket.io": "^10.1.0",
     "@nestjs/throttler": "^4.2.1",
     "@nestjs/websockets": "^10.1.0",
