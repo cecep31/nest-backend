@@ -12,8 +12,8 @@ import { LoggerModule } from 'nestjs-pino';
 @Module({
   imports: [
     ThrottlerModule.forRoot({
-      ttl: 60000,
-      limit: 20,
+      ttl: 60,
+      limit: 30,
     }),
     ConfigModule.forRoot({
       isGlobal: true,

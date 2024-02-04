@@ -28,6 +28,9 @@ model posts {
   body          String?
   slug          String?         @unique(map: "idx_posts_slug")
   createbyid    String?         @db.VarChar(50)
+  image         String?
+  image_url     String?
+  photo_url     String?
   post_comments post_comments[]
   users         users?          @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_creator")
 }
