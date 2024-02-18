@@ -15,6 +15,8 @@ model post_comments {
   text               String?
   post_id            String?   @db.Uuid
   parrent_comment_id BigInt?
+  created_by         String?   @db.Uuid
+  users              users?    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_post_comments_creator")
   posts              posts?    @relation(fields: [post_id], references: [id], map: "fk_posts_post_comments")
 }
 
@@ -63,17 +65,18 @@ model tasks {
 }
 
 model users {
-  id           String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at   DateTime?    @db.Timestamptz(6)
-  updated_at   DateTime?    @db.Timestamptz(6)
-  deleted_at   DateTime?    @db.Timestamptz(6)
-  first_name   String?      @default("pilput")
-  last_name    String?      @default("admin")
-  email        String       @unique(map: "idx_users_email")
-  password     String?
-  image        String?
-  issuperadmin Boolean?     @default(false)
-  posts        posts[]
-  taskgorups   taskgorups[]
-  tasks        tasks[]
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at    DateTime?       @db.Timestamptz(6)
+  updated_at    DateTime?       @db.Timestamptz(6)
+  deleted_at    DateTime?       @db.Timestamptz(6)
+  first_name    String?         @default("pilput")
+  last_name     String?         @default("admin")
+  email         String          @unique(map: "idx_users_email")
+  password      String?
+  image         String?
+  issuperadmin  Boolean?        @default(false)
+  post_comments post_comments[]
+  posts         posts[]
+  taskgorups    taskgorups[]
+  tasks         tasks[]
 }
