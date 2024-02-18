@@ -40,7 +40,7 @@ export class PostsService {
     return this.prisma.post_comments.findMany({
       where: { post_id: post_id, parrent_comment_id: null },
       orderBy: { created_at: 'desc' },
-      include: { users: true }
+      include: { creator: true }
     });
   }
 
