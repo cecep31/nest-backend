@@ -24,8 +24,8 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(client: Socket) {
 
     try {
-      const token = this.extractToken(client.request.headers.authorization);
-      const payload = await this.jwtservice.verifyAsync(token, {
+      const token = client.handshake.query?.token;
+      const payload = await this.jwtservice.verifyAsync(token + "", {
         secret: process.env.JWT_KEY,
       });
       const userid = payload.id
