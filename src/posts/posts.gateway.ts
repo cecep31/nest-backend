@@ -13,6 +13,7 @@ import { UserSocketMapService } from './user-map-service';
 @WebSocketGateway({ namespace: 'posts', cors: true })
 export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private postservice: PostsService, private jwtservice: JwtService, private userSocketMapService: UserSocketMapService) { }
+  
   @WebSocketServer()
   server: Server;
 
