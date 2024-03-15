@@ -30,7 +30,6 @@ export class PostsService {
     return this.prisma.posts.findUnique({ where: { id: id } })
   }
 
-
   commentCreate(data: any) {
     data.created_at = new Date();
     return this.prisma.post_comments.create({ data: data });
