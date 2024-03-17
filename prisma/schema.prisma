@@ -16,7 +16,7 @@ model post_comments {
   post_id            String?   @db.Uuid
   parrent_comment_id BigInt?
   created_by         String?   @db.Uuid
-  creator              users?    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_post_comments_creator")
+  creator            users?    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_post_comments_creator")
   posts              posts?    @relation(fields: [post_id], references: [id], map: "fk_posts_post_comments")
 }
 
@@ -30,8 +30,6 @@ model posts {
   body          String?
   slug          String?         @unique(map: "idx_posts_slug")
   createbyid    String?         @db.VarChar(50)
-  image         String?
-  image_url     String?
   photo_url     String?
   post_comments post_comments[]
   users         users?          @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_creator")

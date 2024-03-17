@@ -35,9 +35,9 @@ export class PostsService {
     return this.prisma.post_comments.create({ data: data });
   }
 
-  getAllcomment(post_id: string): Promise<post_comments[]> {
+  getAllComments(postId: string): Promise<post_comments[]> {
     return this.prisma.post_comments.findMany({
-      where: { post_id: post_id, parrent_comment_id: null },
+      where: { post_id: postId, parrent_comment_id: null },
       orderBy: { created_at: 'asc' },
       include: { creator: true }
     });

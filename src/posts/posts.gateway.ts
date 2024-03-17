@@ -9,13 +9,16 @@ import { Server, Socket } from 'socket.io';
 import { PostsService } from './posts.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserSocketMapService } from './user-map-service';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway({ namespace: 'posts', cors: true })
 export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private postservice: PostsService, private jwtservice: JwtService, private userSocketMapService: UserSocketMapService) { }
-  
+
   @WebSocketServer()
   server: Server;
+
+  private logger = new Logger('PostsGateway'); 
 
   private extractToken(authorization: string): string | undefined {
     const [type, token] = authorization.split(' ') ?? [];
@@ -23,26 +26,26 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleConnection(client: Socket) {
+    
+    const token = this.extractToken(client.handshake.headers.authorization ?? '');
+    // if (!token) return;
 
+    const postId = client.handshake.query.post_id + '';
+    
     try {
-      const token = client.handshake.query?.token;
-      const payload = await this.jwtservice.verifyAsync(token + "", {
+      const { id: userId } = await this.jwtservice.verifyAsync(token, {
         secret: process.env.JWT_KEY,
       });
-      const userid = payload.id
-      const post_id = client.handshake.query.post_id + '';
-      this.userSocketMapService.addUserToRoom(userid, post_id, client);
-    } catch (error) {
-      console.log(error);
+      this.userSocketMapService.addUserToRoom(userId, postId, client);
+    } catch {
     }
-
-    const post_id = client.handshake.query.post_id + '';
-    client.join(post_id);
-    const data = await this.postservice.getAllcomment(post_id + '');
-    client.emit('newComment', data);
+    this.logger.log(`Socket connected: ${client.id}`);
+    client.join(postId);
+    const comments = await this.postservice.getAllComments(postId);
+    client.emit('newComment', comments);
   }
-
   async handleDisconnect(client: Socket) {
+    this.logger.log(`Socket disconnected: ${client.id}`);
     const post_id = client.handshake.query.post_id + '';
     const userid = this.userSocketMapService.getUserIdBySocket(client);
     this.userSocketMapService.removeUserFromRoom(userid, post_id);
@@ -50,20 +53,20 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('sendComment')
   async handleMessage(client: Socket, payload: any) {
+    this.logger.log(`Received message from ${client.id}`);
     const post_id = client.handshake.query.post_id + '';
     const userid = this.userSocketMapService.getUserIdBySocket(client);
     payload.post_id = post_id;
     payload.created_by = userid;
     await this.postservice.commentCreate(payload);
-    const data = await this.postservice.getAllcomment(post_id);
+    const data = await this.postservice.getAllComments(post_id);
     this.server.to(post_id).emit('newComment', data);
   }
 
   @SubscribeMessage('getAllComments')
-  async getallmessage(client: Socket) {
-    const data = await this.postservice.getAllcomment(
-      client.handshake.query.post_id + '',
-    );
-    client.emit('newComment', data);
+  async fetchComments(client: Socket) {
+    const postId = client.handshake.query.post_id+'';
+    const comments = await this.postservice.getAllComments(postId);
+    client.emit('newComment', comments);
   }
 }
