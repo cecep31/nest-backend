@@ -18,7 +18,7 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  private logger = new Logger('PostsGateway'); 
+  private logger = new Logger('PostsGateway');
 
   private extractToken(authorization: string): string | undefined {
     const [type, token] = authorization.split(' ') ?? [];
@@ -29,9 +29,7 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
     const token = this.extractToken(client.handshake.headers.authorization ?? '');
     // if (!token) return;
-
     const postId = client.handshake.query.post_id + '';
-    
     try {
       const { id: userId } = await this.jwtservice.verifyAsync(token, {
         secret: process.env.JWT_KEY,
@@ -65,7 +63,7 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('getAllComments')
   async fetchComments(client: Socket) {
-    const postId = client.handshake.query.post_id+'';
+    const postId = client.handshake.query.post_id + '';
     const comments = await this.postservice.getAllComments(postId);
     client.emit('newComment', comments);
   }

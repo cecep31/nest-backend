@@ -2,7 +2,6 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@
 
 @Injectable()
 export class SupeAdminGuard implements CanActivate{
-
     canActivate(context: ExecutionContext): boolean {
         const { user } = context.switchToHttp().getRequest();
         if (user.issuperadmin) {
