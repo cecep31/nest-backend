@@ -23,9 +23,16 @@ export class UserSocketMapService {
   }
 
   getSocketByUserId(userId: string): Socket | undefined {
+    if (!userId) {
+      return undefined;
+    }
     const roomMap = this.postRoomUserMap.get(userId);
-    return roomMap?.get(userId);
+    if (!roomMap) {
+      return undefined;
+    }
+    return roomMap.get(userId);
   }
+
   getUserIdBySocket(socket: Socket): string | undefined {
     // Iterate through the map to find the user ID associated with the socket
     for (const [, userMap] of this.postRoomUserMap.entries()) {
