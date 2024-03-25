@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
+import compression from '@fastify/compress';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
 
@@ -10,6 +11,7 @@ async function bootstrap() {
   app.enableCors({ origin: "*" })
   app.useGlobalPipes(new ValidationPipe());
   app.useLogger(app.get(Logger));
+  app.register(compression)
   console.log("app running on port " + process.env.PORT || 3000);
   await app.listen(process.env.PORT || 3000, '0.0.0.0');
 
