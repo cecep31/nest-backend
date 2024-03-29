@@ -33,6 +33,14 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
+
+  // refresh token
+  async refreshToken(payload: any) {
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+  }
+
   profile(user: any) {
     return this.userService.findOne(user.id);
   }
