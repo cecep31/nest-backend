@@ -1,15 +1,10 @@
 # generate build and running 
 FROM node:lts-alpine as build
 WORKDIR /app
-COPY . .
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npx prisma generate
 RUN npm run build
-
-# FROM alpine:latest as run
-FROM node:lts-alpine as run
-WORKDIR /app
-COPY --from=build /app/dist/ .
 EXPOSE 3001
-CMD [ "node","main.js" ]
-# CMD [ "bun","run","start" ]
+CMD [ "node", "dist/main.js" ]
