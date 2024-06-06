@@ -11,5 +11,5 @@ FROM node:lts-alpine as run
 WORKDIR /app
 COPY --from=build /app/dist/ .
 EXPOSE 3001
-CMD [ "node","dist/main.js" ]
+CMD [ "node","main.js" ]
 # CMD [ "bun","run","start" ]
