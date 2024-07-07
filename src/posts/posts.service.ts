@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, posts, post_comments } from "@prisma/client";
+import { posts, post_comments } from "@prisma/client";
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -10,19 +10,15 @@ export class PostsService {
 
 
   async posts(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.postsWhereUniqueInput;
-    where?: Prisma.postsWhereInput;
-    orderBy?: Prisma.postsOrderByWithRelationInput;
+    ofset?: number;
+    limit?: number;
   }): Promise<posts[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { ofset, limit } = params;
     return this.prisma.posts.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: ofset || 0,
+      take: limit || 10,
+      include: {creator: true},
+      orderBy: { created_at: 'desc' },
     });
   }
 
