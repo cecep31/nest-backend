@@ -1,20 +1,46 @@
-FROM node:20-slim AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-COPY . /app
+# Stage 1: Build the application
+FROM node:20-alpine AS builder
+
+# Enable Corepack and install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
 WORKDIR /app
 
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
-FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm dlx prisma generate
-RUN pnpm run build
+# Install dependencies
+RUN pnpm install
 
-FROM base
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
-EXPOSE 8000
-CMD [ "pnpm", "start:prod" ]
+# Copy the rest of the application code
+COPY . .
+
+# Generate Prisma client
+RUN pnpm prisma generate
+
+# Build the application
+RUN pnpm build
+
+# Stage 2: Run the application
+FROM node:20-alpine
+
+# Enable Corepack and install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
+WORKDIR /app
+
+# Copy node_modules and built files from the first stage
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+
+# Copy necessary files
+COPY package.json ./
+
+# Expose the application port
+EXPOSE 3000
+
+# Set the command to start the application
+CMD ["node", "dist/main"]
