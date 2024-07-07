@@ -1,17 +1,20 @@
 # Stage 1: Build the application
 FROM node:lts-alpine as builder
-
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+# COPY package*.json ./
+COPY pnpm-lock.yaml ./
 
 RUN npm install
 
 COPY . .
 
-RUN npx prisma generate
+RUN pnpm dlx prisma generate
 
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Setup the production environment
 FROM node:lts-alpine
