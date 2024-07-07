@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM node:lts-alpine as builder
+FROM node:lts-slim as builder
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -17,7 +17,7 @@ RUN pnpm dlx prisma generate
 RUN pnpm run build
 
 # Stage 2: Setup the production environment
-FROM node:lts-alpine
+FROM node:lts-slim
 
 WORKDIR /usr/src/app
 
