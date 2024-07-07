@@ -1,29 +1,20 @@
-# Stage 1: Build the application
-FROM node:lts-slim as builder
+FROM node:20-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-WORKDIR /usr/src/app
+COPY . /app
+WORKDIR /app
 
-# COPY package*.json ./
-COPY pnpm-lock.yaml ./
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-RUN pnpm install
-
-COPY . .
-
+FROM base AS build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm dlx prisma generate
-
 RUN pnpm run build
 
-# Stage 2: Setup the production environment
-FROM node:lts-slim
-
-WORKDIR /usr/src/app
-
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-
-EXPOSE 3000
-
-CMD [ "node", "dist/main"]
+FROM base
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/dist /app/dist
+EXPOSE 8000
+CMD [ "pnpm", "start" ]
