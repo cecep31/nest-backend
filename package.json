@@ -36,14 +36,15 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "fastify": "^4.28.1",
-    "nestjs-pino": "^3.5.0",
-    "pino-http": "^8.6.1",
-    "pino-pretty": "^10.3.1",
+    "nestjs-pino": "^4.1.0",
+    "pino-http": "^10.2.0",
+    "pino-pretty": "^11.2.1",
     "reflect-metadata": "^0.1.14",
     "rimraf": "^5.0.8",
     "rxjs": "^7.8.1",
     "socket.io": "^4.7.5",
-    "upgrade": "^1.1.0"
+    "upgrade": "^1.1.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.2",

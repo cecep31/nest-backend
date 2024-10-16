@@ -1,32 +1,26 @@
 # Stage 1: Build the application
 FROM node:20-alpine AS builder
 
-# Enable Corepack and install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 # Set working directory
 WORKDIR /app
 
 # Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 
 # Install dependencies
-RUN pnpm install
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
 
 # Generate Prisma client
-RUN pnpm prisma generate
+RUN npm run prisma:generate
 
 # Build the application
-RUN pnpm build
+RUN npm run build
 
 # Stage 2: Run the application
 FROM node:20-alpine
-
-# Enable Corepack and install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Set working directory
 WORKDIR /app
