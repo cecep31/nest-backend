@@ -13,7 +13,11 @@ import { Logger } from '@nestjs/common';
 
 @WebSocketGateway({ namespace: 'posts', cors: true })
 export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private postservice: PostsService, private jwtservice: JwtService, private userSocketMapService: UserSocketMapService) { }
+  constructor(
+    private postservice: PostsService,
+    private jwtservice: JwtService,
+    private userSocketMapService: UserSocketMapService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -26,17 +30,17 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleConnection(client: Socket) {
-    
-    const token = this.extractToken(client.handshake.headers.authorization ?? '');
+    const token = this.extractToken(
+      client.handshake.headers.authorization ?? '',
+    );
     // if (!token) return;
     const postId = client.handshake.query.post_id + '';
     try {
-      const { id: userId } = await this.jwtservice.verifyAsync(token, {
+      const { user_id } = await this.jwtservice.verifyAsync(token, {
         secret: process.env.JWT_KEY,
       });
-      this.userSocketMapService.addUserToRoom(userId, postId, client);
-    } catch {
-    }
+      this.userSocketMapService.addUserToRoom(user_id, postId, client);
+    } catch {}
     this.logger.log(`Socket connected: ${client.id}`);
     client.join(postId);
     const comments = await this.postservice.getAllComments(postId);
