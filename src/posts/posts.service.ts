@@ -8,7 +8,6 @@ export class PostsService {
     private prisma: PrismaService
   ) { }
 
-
   async posts(params: {
     ofset?: number;
     limit?: number;
