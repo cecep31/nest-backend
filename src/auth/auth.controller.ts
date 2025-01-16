@@ -15,7 +15,7 @@ import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -35,6 +35,4 @@ export class AuthController {
   refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user);
   }
-
-
 }

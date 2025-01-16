@@ -2,7 +2,7 @@
   "name": "nest-backend",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "pilput",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -83,6 +83,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "packageManager": "pnpm@8.6.12+sha1.a2f983fbf8f2531dc85db2a5d7f398063d51a6f3"
+  }
 }
