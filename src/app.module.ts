@@ -9,19 +9,16 @@ import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
-    LoggerModule.forRoot(
-      {
-        pinoHttp: {
-          transport: {
-            target: 'pino-pretty',
-            options: {
-              singleLine: true,
-            },
-
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            singleLine: true,
           },
         },
-      }
-    ),
+      },
+    }),
     UsersModule,
     AuthModule,
     PostsModule,
@@ -29,4 +26,4 @@ import { LoggerModule } from 'nestjs-pino';
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
-export class AppModule { }
+export class AppModule {}
