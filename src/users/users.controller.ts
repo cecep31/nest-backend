@@ -14,7 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SupeAdminGuard } from 'src/auth/superadmin.guard';
 
-@Controller('users')
+@Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
