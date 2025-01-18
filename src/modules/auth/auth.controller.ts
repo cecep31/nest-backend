@@ -9,9 +9,12 @@ import {
   UseGuards,
   UseInterceptors,
   ClassSerializerInterceptor,
+  UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { LoginDto, LoginSchema } from './dto/login-dto';
 
 @Controller({
   path: 'auth',
@@ -22,7 +25,8 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
+  @UsePipes(new ZodValidationPipe(LoginSchema))
+  signIn(@Body() signInDto: LoginDto) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
