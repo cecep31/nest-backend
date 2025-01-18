@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { posts as PostModel } from '@prisma/client';
-import { SupeAdminGuard } from 'src/auth/superadmin.guard';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { SupeAdminGuard } from 'src/modules/auth/superadmin.guard';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller({

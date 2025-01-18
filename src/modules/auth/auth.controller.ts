@@ -13,7 +13,10 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 
-@Controller('auth')
+@Controller({
+  path: 'auth',
+  version: '1',
+})
 export class AuthController {
   constructor(private authService: AuthService) {}
 

@@ -7,15 +7,15 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { PostsService } from './posts.service';
-import { JwtService } from '@nestjs/jwt';
 import { UserSocketMapService } from './user-map-service';
 import { Logger } from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
 
 @WebSocketGateway({ namespace: 'posts', cors: true })
 export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private postservice: PostsService,
-    private jwtservice: JwtService,
+    private authService: AuthService,
     private userSocketMapService: UserSocketMapService,
   ) {}
 
@@ -36,9 +36,7 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // if (!token) return;
     const postId = client.handshake.query.post_id + '';
     try {
-      const { user_id } = await this.jwtservice.verifyAsync(token, {
-        secret: process.env.JWT_KEY,
-      });
+      const { user_id } = await this.authService.verifyToken(token);
       this.userSocketMapService.addUserToRoom(user_id, postId, client);
     } catch {}
     this.logger.log(`Socket connected: ${client.id}`);
