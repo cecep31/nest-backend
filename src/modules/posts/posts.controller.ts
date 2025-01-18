@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { posts as PostModel } from '@prisma/client';
 import { SupeAdminGuard } from 'src/modules/auth/superadmin.guard';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -21,8 +20,15 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  async findAll(): Promise<PostModel[]> {
-    return this.postsService.posts({});
+  async findAll(
+    @Param('offset') offset: number = 0,
+    @Param('limit') limit: number = 10,
+  ) {
+    return {
+      success: true,
+      message: 'All posts',
+      data: await this.postsService.posts({ offset, limit }),
+    };
   }
 
   @Get(':id')

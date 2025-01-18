@@ -11,15 +11,15 @@ export class PostsRepository {
   }
 
   async findAll(params?: {
-    skip?: number;
+    offset?: number;
     take?: number;
     where?: Prisma.postsWhereInput;
     orderBy?: Prisma.postsOrderByWithRelationInput;
     include?: Prisma.postsInclude;
   }): Promise<posts[]> {
-    const { skip, take, where, orderBy, include } = params || {};
+    const { offset, take, where, orderBy, include } = params || {};
     return this.prisma.posts.findMany({
-      skip,
+      skip: offset || 0,
       take,
       where,
       orderBy,

@@ -1,28 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { posts, post_comments } from "@prisma/client";
+import { posts, post_comments } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
   constructor(
-    private prisma: PrismaService
-  ) { }
+    private prisma: PrismaService,
+    private postsRepository: PostsRepository,
+  ) {}
 
-  async posts(params: {
-    ofset?: number;
-    limit?: number;
-  }): Promise<posts[]> {
-    const { ofset, limit } = params;
-    return this.prisma.posts.findMany({
-      skip: ofset || 0,
-      take: limit || 10,
-      include: {creator: true},
-      orderBy: { created_at: 'desc' },
+  async posts(params: { offset?: number; limit?: number }): Promise<posts[]> {
+    const { offset, limit } = params;
+    const posts = await this.postsRepository.findAll({
+      offset,
+      take: limit,
+      include: {
+        creator: true,
+        post_comments: true,
+        posts_to_tags: {
+          include: {
+            tags: true,
+          },
+        },
+      },
+    });
+    return posts.map((post) => {
+      return {
+        ...post,
+        body: post.body?.substring(0, 200) || '' + '...',
+      };
     });
   }
 
   findById(id: string) {
-    return this.prisma.posts.findUnique({ where: { id: id } })
+    return this.prisma.posts.findUnique({ where: { id: id } });
   }
 
   commentCreate(data: any) {
@@ -34,7 +46,7 @@ export class PostsService {
     return this.prisma.post_comments.findMany({
       where: { post_id: postId, parrent_comment_id: null },
       orderBy: { created_at: 'asc' },
-      include: { creator: true }
+      include: { creator: true },
     });
   }
 
@@ -43,8 +55,7 @@ export class PostsService {
   }
 
   createPost(post: any) {
-    const newpost = this.prisma.posts.create({ data: post })
-    return newpost
+    const newpost = this.prisma.posts.create({ data: post });
+    return newpost;
   }
-
 }
