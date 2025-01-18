@@ -29,7 +29,6 @@ model posts {
   created_by    String?         @db.Uuid
   body          String?
   slug          String?         @unique(map: "idx_posts_slug") @db.VarChar(255)
-  createbyid    String?         @db.VarChar(50)
   photo_url     String?
   published     Boolean?        @default(true)
   likes         likes[]
