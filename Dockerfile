@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM node:22-alpine AS builder
+FROM bun:1-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -8,19 +8,19 @@ WORKDIR /app
 COPY package.json ./
 
 # Install dependencies
-RUN npm install
+RUN bun install
 
 # Copy the rest of the application code
 COPY . .
 
 # Generate Prisma client
-RUN npx prisma generate
+RUN bunx prisma generate
 
 # Build the application
-RUN npm run build
+RUN bun run build
 
 # Stage 2: Run the application
-FROM node:22-alpine
+FROM bun:1-alpine
 
 # Set working directory
 WORKDIR /app
@@ -37,4 +37,4 @@ COPY package.json ./
 EXPOSE 3000
 
 # Set the command to start the application
-CMD ["node", "dist/main"]
+CMD ["bun", "dist/main"]
