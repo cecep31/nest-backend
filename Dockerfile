@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM bun:1-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN bunx prisma generate
 RUN bun run build
 
 # Stage 2: Run the application
-FROM bun:1-alpine
+FROM oven/bun:1-alpine
 
 # Set working directory
 WORKDIR /app
