@@ -37,4 +37,4 @@ COPY package.json ./
 EXPOSE 3000
 
 # Set the command to start the application
-CMD ["bun", "dist/main"]
+CMD ["bun", "dist/main.js"]
