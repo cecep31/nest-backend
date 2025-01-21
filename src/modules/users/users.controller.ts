@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { AuthGuard } from 'src/modules/auth/auth.guard';
-import { SupeAdminGuard } from 'src/modules/auth/superadmin.guard';
+import { AuthGuard } from '../auth/auth.guard';
+import { SupeAdminGuard } from '../auth/superadmin.guard';
 
 @Controller({ path: 'users', version: '1' })
 export class UsersController {

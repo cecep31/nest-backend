@@ -1,13 +1,13 @@
-# Stage 1: Build the application
-FROM oven/bun:1-alpine AS builder
+# Use the official Bun image as the base image
+FROM oven/bun:1-alpine AS base
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml
-COPY package.json ./
+# Copy package.json and bun.lockb to the working directory
+COPY package.json bun.lockb ./
 
-# Install dependencies
+# Install dependencies using Bun
 RUN bun install
 
 # Copy the rest of the application code
@@ -16,25 +16,25 @@ COPY . .
 # Generate Prisma client
 RUN bunx prisma generate
 
-# Build the application
+# Build the NestJS application
 RUN bun run build
 
-# Stage 2: Run the application
+# Use a smaller image for the final stage
 FROM oven/bun:1-alpine
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy node_modules and built files from the first stage
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-
-# Copy necessary files
-COPY package.json ./
+# Copy only the necessary files from the base stage
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/package.json ./package.json
+COPY --from=base /app/bun.lockb ./bun.lockb
+COPY --from=base /app/dist ./dist
+COPY --from=base /app/prisma ./prisma
 
 # Expose the application port
-EXPOSE 3000
+EXPOSE 3001
+
 
 # Set the command to start the application
 CMD ["bun", "dist/main.js"]
