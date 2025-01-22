@@ -23,10 +23,9 @@ export class PostsService {
             email: true,
           },
         },
-        post_comments: true,
-        posts_to_tags: {
+        tags: {
           include: {
-            tags: true,
+            tag: true,
           },
         },
       },

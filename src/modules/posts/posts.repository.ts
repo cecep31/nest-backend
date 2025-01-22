@@ -16,7 +16,7 @@ export class PostsRepository {
     where?: Prisma.postsWhereInput;
     orderBy?: Prisma.postsOrderByWithRelationInput;
     include?: Prisma.postsInclude;
-  }): Promise<posts[]> {
+  }) {
     const { offset, take, where, orderBy, include } = params || {};
     return this.prisma.posts.findMany({
       skip: offset || 0,
@@ -27,10 +27,13 @@ export class PostsRepository {
     });
   }
 
-  async findOne(where: Prisma.postsWhereUniqueInput, include?: Prisma.postsInclude): Promise<posts | null> {
-    return this.prisma.posts.findUnique({ 
+  async findOne(
+    where: Prisma.postsWhereUniqueInput,
+    include?: Prisma.postsInclude,
+  ) {
+    return this.prisma.posts.findUnique({
       where,
-      include
+      include,
     });
   }
 
@@ -41,12 +44,12 @@ export class PostsRepository {
         creator: true,
         likes: true,
         post_comments: true,
-        posts_to_tags: {
+        tags: {
           include: {
-            tags: true
-          }
-        }
-      }
+            tag: true,
+          },
+        },
+      },
     });
   }
 
@@ -68,7 +71,7 @@ export class PostsRepository {
   async softDelete(id: string): Promise<posts> {
     return this.prisma.posts.update({
       where: { id },
-      data: { deleted_at: new Date() }
+      data: { deleted_at: new Date() },
     });
   }
 
@@ -76,12 +79,12 @@ export class PostsRepository {
     skip?: number;
     take?: number;
     orderBy?: Prisma.postsOrderByWithRelationInput;
-  }): Promise<posts[]> {
+  }) {
     const { skip, take, orderBy } = params || {};
     return this.prisma.posts.findMany({
       where: {
         published: true,
-        deleted_at: null
+        deleted_at: null,
       },
       skip,
       take,
@@ -89,12 +92,13 @@ export class PostsRepository {
       include: {
         creator: true,
         likes: true,
-        posts_to_tags: {
+        post_comments: false,
+        tags: {
           include: {
-            tags: true
-          }
-        }
-      }
+            tag: true,
+          },
+        },
+      },
     });
   }
 
@@ -102,8 +106,8 @@ export class PostsRepository {
     return this.prisma.posts.count({
       where: {
         created_by: userId,
-        deleted_at: null
-      }
+        deleted_at: null,
+      },
     });
   }
 }
