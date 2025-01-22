@@ -4,12 +4,11 @@ import { PostsController } from './posts.controller';
 import { PrismaService } from '../../prisma.service';
 import { PostsGateway } from './posts.gateway';
 import { UserSocketMapService } from './user-map-service';
-import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
 import { PostsRepository } from './posts.repository';
 
 @Module({
-  imports: [ConfigModule, AuthModule],
+  imports: [AuthModule],
   controllers: [PostsController],
   providers: [
     PostsService,

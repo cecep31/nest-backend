@@ -9,7 +9,6 @@ import { AuthGuard } from './auth.guard';
 @Module({
   imports: [
     UsersModule,
-    ConfigModule,
     JwtModule.registerAsync({
       global: true,
       inject: [ConfigService],
