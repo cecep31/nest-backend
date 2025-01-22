@@ -16,7 +16,13 @@ export class PostsService {
       offset,
       take: limit,
       include: {
-        creator: true,
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
         post_comments: true,
         posts_to_tags: {
           include: {
