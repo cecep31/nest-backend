@@ -28,7 +28,6 @@ WORKDIR /app
 # Copy only the necessary files from the base stage
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/package.json ./package.json
-COPY --from=base /app/bun.lockb ./bun.lockb
 COPY --from=base /app/dist ./dist
 COPY --from=base /app/prisma ./prisma
 
