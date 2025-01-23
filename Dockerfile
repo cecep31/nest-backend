@@ -1,5 +1,5 @@
 # Use the official Bun image as the base image
-FROM oven/bun:1-alpine AS base
+FROM node:22-alpine AS base
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN bunx prisma generate
 RUN bun run build
 
 # Use a smaller image for the final stage
-FROM oven/bun:1-alpine
+FROM node:22-alpine
 
 # Set the working directory
 WORKDIR /app
