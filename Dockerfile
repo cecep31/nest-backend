@@ -36,4 +36,4 @@ EXPOSE 3001
 
 
 # Set the command to start the application
-CMD ["bun", "dist/main.js"]
+CMD ["node", "dist/main.js"]
