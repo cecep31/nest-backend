@@ -8,16 +8,16 @@ WORKDIR /app
 COPY package.json bun.lockb ./
 
 # Install dependencies using Bun
-RUN bun install
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
 
 # Generate Prisma client
-RUN bunx prisma generate
+RUN npx prisma generate
 
 # Build the NestJS application
-RUN bun run build
+RUN npm run build
 
 # Use a smaller image for the final stage
 FROM node:22-alpine
