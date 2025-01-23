@@ -84,6 +84,6 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "bun"
+    "testEnvironment": "node"
   }
 }
