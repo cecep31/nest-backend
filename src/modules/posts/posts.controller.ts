@@ -31,6 +31,15 @@ export class PostsController {
     };
   }
 
+  @Get('random')
+  async getPostRandom(@Param('limit') limit: number = 6) {
+    return {
+      success: true,
+      message: 'Random post',
+      data: await this.postsService.getPostRandom(limit),
+    };
+  }
+
   @Get(':id')
   async post(@Param('id') id: string) {
     return this.postsService.findById(id);

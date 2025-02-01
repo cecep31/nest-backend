@@ -75,6 +75,24 @@ export class PostsRepository {
     });
   }
 
+  async findPostRandom(limit: number = 6) {
+    return this.prisma.$queryRaw<posts[]>`
+      SELECT p.*, 
+        json_build_object('id', u.id, 'username', u.username, 'email', u.email) as creator,
+        (
+          SELECT json_agg(json_build_object('id', t.id, 'name', t.name))
+          FROM posts_to_tags pt
+          JOIN tags t ON pt.tag_id = t.id
+          WHERE pt.post_id = p.id
+        ) as tags
+      FROM posts p
+      JOIN users u ON p.created_by = u.id
+      WHERE p.deleted_at IS NULL
+      ORDER BY RANDOM()
+      LIMIT ${limit}
+    `;
+  }
+
   async findPublishedPosts(params?: {
     skip?: number;
     take?: number;

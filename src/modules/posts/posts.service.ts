@@ -42,6 +42,16 @@ export class PostsService {
     return this.prisma.posts.findUnique({ where: { id: id } });
   }
 
+  async getPostRandom(limit: number = 6) {
+    const posts = await this.postsRepository.findPostRandom(limit);
+    return posts.map((post) => {
+      return {
+        ...post,
+        body: post.body?.substring(0, 200) || '' + '...',
+      };
+    });
+  }
+
   commentCreate(data: any) {
     data.created_at = new Date();
     return this.prisma.post_comments.create({ data: data });
