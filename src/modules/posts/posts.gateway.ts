@@ -58,7 +58,7 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userid = this.userSocketMapService.getUserIdBySocket(client);
     payload.post_id = post_id;
     payload.created_by = userid;
-    await this.postservice.commentCreate(payload);
+    await this.postservice.createComment(payload);
     const data = await this.postservice.getAllComments(post_id);
     this.server.to(post_id).emit('newComment', data);
   }

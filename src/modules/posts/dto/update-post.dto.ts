@@ -1,11 +1,9 @@
-import { IsNotEmpty } from 'class-validator';
+import { z } from 'zod';
 
-export class UpdatePostDto {
-  id: string;
+export const updatePostSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, { message: 'Title cannot be empty' }),
+  body: z.string().min(1, { message: 'Body cannot be empty' })
+});
 
-  @IsNotEmpty()
-  title: string;
-
-  @IsNotEmpty()
-  body: string;
-}
+export type UpdatePostDto = z.infer<typeof updatePostSchema>;

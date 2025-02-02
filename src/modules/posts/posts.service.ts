@@ -10,9 +10,14 @@ export class PostsService {
     private postsRepository: PostsRepository,
   ) {}
 
+  private truncateBody(body?: string, maxLength: number = 200): string {
+    if (!body) return '';
+    return body.length > maxLength ? body.substring(0, maxLength) + '...' : body;
+  }
+
   async posts(params: { offset?: number; limit?: number }): Promise<posts[]> {
     const { offset, limit } = params;
-    const posts = await this.postsRepository.findAll({
+    const postsData = await this.postsRepository.findAll({
       offset,
       take: limit,
       include: {
@@ -30,12 +35,11 @@ export class PostsService {
         },
       },
     });
-    return posts.map((post) => {
-      return {
-        ...post,
-        body: post.body?.substring(0, 200) || '' + '...',
-      };
-    });
+    return postsData.map(post => ({
+      ...post,
+      body: this.truncateBody(post.body),
+      tags: post.tags,
+    }));
   }
 
   findById(id: string) {
@@ -43,18 +47,16 @@ export class PostsService {
   }
 
   async getPostRandom(limit: number = 6) {
-    const posts = await this.postsRepository.findPostRandom(limit);
-    return posts.map((post) => {
-      return {
-        ...post,
-        body: post.body?.substring(0, 200) || '' + '...',
-      };
-    });
+    const postsData = await this.postsRepository.findPostRandom(limit);
+    return postsData.map(post => ({
+      ...post,
+      body: this.truncateBody(post.body),
+    }));
   }
 
-  commentCreate(data: any) {
+  createComment(data: any) {
     data.created_at = new Date();
-    return this.prisma.post_comments.create({ data: data });
+    return this.prisma.post_comments.create({ data });
   }
 
   getAllComments(postId: string): Promise<post_comments[]> {
@@ -69,8 +71,8 @@ export class PostsService {
     return this.prisma.posts.delete({ where: { id: post_id } });
   }
 
-  createPost(post: any) {
-    const newpost = this.prisma.posts.create({ data: post });
+  async createPost(post: any) {
+    const newpost = await this.prisma.posts.create({ data: post });
     return newpost;
   }
 }
