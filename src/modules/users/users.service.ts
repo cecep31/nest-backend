@@ -3,10 +3,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { hash } from 'bcrypt';
 import { users } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
+import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private userRepository: UserRepository) {}
 
   async hashPassword(password: string) {
     return await hash(password, 14);
@@ -23,7 +24,7 @@ export class UsersService {
   // }
 
   findAll(): Promise<users[]> {
-    return this.prisma.users.findMany();
+    return this.userRepository.findAll();
   }
 
   async findByEmail(email: string): Promise<users> {
