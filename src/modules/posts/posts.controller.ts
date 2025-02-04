@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
@@ -24,36 +25,69 @@ export class PostsController {
     @Param('offset') offset: number = 0,
     @Param('limit') limit: number = 10,
   ) {
+    const {metadata, postsData} = await this.postsService.posts({ offset, limit })
     return {
       success: true,
-      message: 'All posts',
-      data: await this.postsService.posts({ offset, limit }),
+      message: 'Successfully fetched posts',
+      data: postsData,
+      metadata
     };
   }
 
-  @Get('random')
+  @Get('u/:username/:slug')
+  async getByUsernameAndSlug(
+    @Param('username') username: string,
+    @Param('slug') slug: string,
+  ) {
+    return {
+      success: true,
+      message: 'Successfully fetched post',
+      data: await this.postsService.getByUsernameAndSlug(username, slug),
+    };
+  }
+
+  @Get('/random')
   async getPostRandom(@Param('limit') limit: number = 6) {
     return {
       success: true,
-      message: 'Random post',
+      message: 'Successfully fetched random posts',
       data: await this.postsService.getPostRandom(limit),
     };
   }
 
   @Get(':id')
   async post(@Param('id') id: string) {
-    return this.postsService.findById(id);
+    const post = await this.postsService.findById(id);
+    if (!post) {
+      return {
+        success: false,
+        message: 'Post not found',
+      };
+    }
+    return {
+      success: true,
+      message: 'Successfully fetched post',
+      data: post,
+    };
   }
 
   @UseGuards(AuthGuard, SupeAdminGuard)
   @Delete(':id')
-  deletePosy(@Param('id') id: string) {
-    return this.postsService.deletePost(id);
+  async deletePosy(@Param('id') id: string) {
+    return {
+      success: true,
+      message: 'Successfully deleted post',
+      data: await this.postsService.deletePost(id),
+    };
   }
 
-  @UseGuards(AuthGuard, SupeAdminGuard)
+  @UseGuards(AuthGuard)
   @Post()
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.createPost(createPostDto);
+  async createPost(@Body() createPostDto: CreatePostDto, @Request() req) {
+    return {
+      success: true,
+      message: 'Successfully created post',
+      data: await this.postsService.createPost(createPostDto, req.user.user_id),
+    };
   }
 }

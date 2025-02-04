@@ -23,7 +23,14 @@ export class PostsRepository {
       take,
       where,
       orderBy,
-      include,
+      include: {
+        ...include,
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      },
     });
   }
 
@@ -41,9 +48,40 @@ export class PostsRepository {
     return this.prisma.posts.findUnique({
       where: { slug },
       include: {
-        creator: true,
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
         likes: true,
-        post_comments: true,
+        post_comments: false,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findByUsernameAndSlug(
+    username: string,
+    slug: string,
+  ): Promise<posts | null> {
+    return this.prisma.posts.findUnique({
+      where: { creator: { username }, slug },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+        likes: true,
+        post_comments: false,
         tags: {
           include: {
             tag: true,

@@ -15,9 +15,13 @@ export class PostsService {
     return body.length > maxLength ? body.substring(0, maxLength) + '...' : body;
   }
 
-  async posts(params: { offset?: number; limit?: number }): Promise<posts[]> {
+  async posts(params: { offset?: number; limit?: number }) {
     const { offset, limit } = params;
     const postsData = await this.postsRepository.findAll({
+      where: {
+        deleted_at: null,
+        published: true,
+      },
       offset,
       take: limit,
       include: {
@@ -35,11 +39,22 @@ export class PostsService {
         },
       },
     });
-    return postsData.map(post => ({
-      ...post,
-      body: this.truncateBody(post.body),
-      tags: post.tags,
-    }));
+    const totalposts = await this.prisma.posts.count({
+      where: {
+        deleted_at: null,
+        published: true,
+      },
+    });
+    return {
+      postsData: postsData.map(post => ({
+        ...post,
+        body: this.truncateBody(post.body),
+        tags: post.tags.map(tagRelation => tagRelation.tag),
+      })),
+      metadata: {
+        totalItems: totalposts,
+      },
+    };
   }
 
   findById(id: string) {
@@ -50,7 +65,7 @@ export class PostsService {
     const postsData = await this.postsRepository.findPostRandom(limit);
     return postsData.map(post => ({
       ...post,
-      body: this.truncateBody(post.body),
+      body: this.truncateBody(post.body)
     }));
   }
 
@@ -67,11 +82,20 @@ export class PostsService {
     });
   }
 
+  getByUsernameAndSlug(username: string, slug: string) {
+    return this.postsRepository.findByUsernameAndSlug(username, slug);
+  }
+
   deletePost(post_id: string) {
     return this.prisma.posts.delete({ where: { id: post_id } });
   }
 
-  async createPost(post: any) {
+  async createPost(postData: any, user_id: string) {
+    const post = {
+      ...postData,
+      creator_id: user_id,
+      created_at: new Date(),
+    };
     const newpost = await this.prisma.posts.create({ data: post });
     return newpost;
   }
