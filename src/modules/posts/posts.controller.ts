@@ -18,7 +18,7 @@ import { CreatePostDto } from './dto/create-post.dto';
   path: 'posts',
 })
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(private postsService: PostsService) {}
 
   @Get()
   async findAll(
@@ -73,7 +73,7 @@ export class PostsController {
 
   @UseGuards(AuthGuard, SupeAdminGuard)
   @Delete(':id')
-  async deletePosy(@Param('id') id: string) {
+  async deletePost(@Param('id') id: string) {
     return {
       success: true,
       message: 'Successfully deleted post',
