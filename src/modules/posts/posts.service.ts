@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { posts, post_comments } from '@prisma/client';
+import { post_comments } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
 import { PostsRepository } from './posts.repository';
 
@@ -12,7 +12,9 @@ export class PostsService {
 
   private truncateBody(body?: string, maxLength: number = 200): string {
     if (!body) return '';
-    return body.length > maxLength ? body.substring(0, maxLength) + '...' : body;
+    return body.length > maxLength
+      ? body.substring(0, maxLength) + '...'
+      : body;
   }
 
   async posts(params: { offset?: number; limit?: number }) {
@@ -46,10 +48,10 @@ export class PostsService {
       },
     });
     return {
-      postsData: postsData.map(post => ({
+      postsData: postsData.map((post) => ({
         ...post,
         body: this.truncateBody(post.body),
-        tags: post.tags.map(tagRelation => tagRelation.tag),
+        tags: post.tags.map((tagRelation) => tagRelation.tag),
       })),
       metadata: {
         totalItems: totalposts,
@@ -63,9 +65,9 @@ export class PostsService {
 
   async getPostRandom(limit: number = 6) {
     const postsData = await this.postsRepository.findPostRandom(limit);
-    return postsData.map(post => ({
+    return postsData.map((post) => ({
       ...post,
-      body: this.truncateBody(post.body)
+      body: this.truncateBody(post.body),
     }));
   }
 
