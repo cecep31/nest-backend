@@ -21,7 +21,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
-    const compare = await this.comparePassword(user.password, password);
+    const compare = await this.comparePassword(user.password ?? '', password);
 
     if (!compare) {
       throw new UnauthorizedException();

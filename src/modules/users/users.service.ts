@@ -7,7 +7,10 @@ import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService, private userRepository: UserRepository) {}
+  constructor(
+    private prisma: PrismaService,
+    private userRepository: UserRepository,
+  ) {}
 
   async hashPassword(password: string) {
     return await hash(password, 14);
@@ -27,11 +30,11 @@ export class UsersService {
     return this.userRepository.findAll();
   }
 
-  async findByEmail(email: string): Promise<users> {
+  async findByEmail(email: string) {
     return this.prisma.users.findFirst({ where: { email: email } });
   }
 
-  findOne(id: string): Promise<users> {
+  async findOne(id: string) {
     return this.prisma.users.findFirst({ where: { id: id } });
   }
 

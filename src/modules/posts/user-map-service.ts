@@ -9,7 +9,8 @@ export class UserSocketMapService {
     if (!this.postRoomUserMap.has(roomId)) {
       this.postRoomUserMap.set(roomId, new Map());
     }
-    this.postRoomUserMap.get(roomId).set(userId, socket);
+    // Using non-null assertion operator (!) since we know roomId exists in the map
+    this.postRoomUserMap.get(roomId)!.set(userId, socket);
   }
 
   removeUserFromRoom(userId: string, roomId: string) {

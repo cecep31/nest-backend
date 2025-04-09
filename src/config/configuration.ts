@@ -1,5 +1,5 @@
 export default () => ({
-  port: parseInt(process.env.PORT, 10) || 3001,
-  database_url: process.env.DATABASE_URL,
-  jwt_secret: process.env.JWT_SECRET,
+  port: parseInt(process.env.PORT ?? "3001", 10),
+  database_url: process.env.DATABASE_URL || 'mongodb://localhost:27017/nest',
+  jwt_secret: process.env.JWT_SECRET || 'default_jwt_secret_for_development',
 });

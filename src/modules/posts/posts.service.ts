@@ -50,7 +50,7 @@ export class PostsService {
     return {
       postsData: postsData.map((post) => ({
         ...post,
-        body: this.truncateBody(post.body),
+        body: this.truncateBody(post.body ?? ''),
         tags: post.tags.map((tagRelation) => tagRelation.tag),
       })),
       metadata: {
@@ -67,7 +67,7 @@ export class PostsService {
     const postsData = await this.postsRepository.findPostRandom(limit);
     return postsData.map((post) => ({
       ...post,
-      body: this.truncateBody(post.body),
+      body: this.truncateBody(post.body ?? ''),
     }));
   }
 

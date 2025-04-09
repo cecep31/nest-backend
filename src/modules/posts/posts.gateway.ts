@@ -32,7 +32,7 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(client: Socket) {
     const token = this.extractToken(
       client.handshake.headers.authorization ?? '',
-    );
+    ) ?? '';
     // if (!token) return;
     const postId = client.handshake.query.post_id + '';
     try {
@@ -48,7 +48,7 @@ export class PostsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log(`Socket disconnected: ${client.id}`);
     const post_id = client.handshake.query.post_id + '';
     const userid = this.userSocketMapService.getUserIdBySocket(client);
-    this.userSocketMapService.removeUserFromRoom(userid, post_id);
+    this.userSocketMapService.removeUserFromRoom(userid ?? '', post_id);
   }
 
   @SubscribeMessage('sendComment')
