@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { compare } from "bcrypt";
 import { UsersService } from '../users/users.service';
 import { ConfigService } from '@nestjs/config';
 
@@ -12,7 +13,7 @@ export class AuthService {
   ) {}
 
   comparePassword(hash: string, password: string) {
-    return Bun.password.verify(password, hash);
+    return compare(password, hash);
   }
 
   async signIn(email: string, password: string): Promise<any> {
