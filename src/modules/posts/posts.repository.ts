@@ -27,9 +27,9 @@ export class PostsRepository {
         ...include,
         tags: {
           include: {
-            tag: true
-          }
-        }
+            tag: true,
+          },
+        },
       },
     });
   }
