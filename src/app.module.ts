@@ -6,7 +6,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
-import { WorkspaceModule } from './modules/workspace/workspace.module';
+import { PagesModule } from './modules/note/pages/pages.module';
+import { WorkspacesModule } from './modules/note/workspaces/workspaces.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -18,7 +19,8 @@ import configuration from './config/configuration';
     UsersModule,
     AuthModule,
     PostsModule,
-    WorkspaceModule,
+    PagesModule,
+    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

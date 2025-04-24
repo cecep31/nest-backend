@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   ClassSerializerInterceptor,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -31,14 +32,14 @@ export class UsersController {
   //   return this.usersService.update(id, updateUserDto);
   // }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, SupeAdminGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, SupeAdminGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -47,6 +48,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard, SupeAdminGuard)
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
