@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model post_comments {
+  id                 String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at         DateTime? @db.Timestamptz(6)
+  updated_at         DateTime? @db.Timestamptz(6)
+  deleted_at         DateTime? @db.Timestamptz(6)
+  text               String?
+  post_id            String?   @db.Uuid
+  parrent_comment_id BigInt?
+  created_by         String?   @db.Uuid
+  creator            users?    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_post_comments_creator")
+  posts              posts?    @relation(fields: [post_id], references: [id], map: "fk_posts_post_comments")
+}
+
+model posts {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at    DateTime?       @db.Timestamptz(6)
+  updated_at    DateTime?       @db.Timestamptz(6)
+  deleted_at    DateTime?       @db.Timestamptz(6)
+  title         String?         @db.VarChar(255)
+  created_by    String?         @db.Uuid
+  body          String?
+  slug          String?         @unique(map: "idx_posts_slug") @db.VarChar(255)
+  photo_url     String?
+  published     Boolean?        @default(true)
+  likes         likes[]
+  post_comments post_comments[]
+  creator       users?          @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_creator")
+  tags          posts_to_tags[]
+}
+
+model users {
+  id             String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at     DateTime?       @db.Timestamptz(6)
+  updated_at     DateTime?       @db.Timestamptz(6)
+  deleted_at     DateTime?       @db.Timestamptz(6)
+  first_name     String?         @default("pilput") @db.VarChar(255)
+  last_name      String?         @default("admin") @db.VarChar(255)
+  email          String          @unique(map: "idx_users_email") @db.VarChar(255)
+  password       String?         @db.VarChar(255)
+  image          String?
+  is_super_admin Boolean?        @default(false)
+  username       String?         @unique(map: "idx_users_username") @db.VarChar(255)
+  files          files[]
+  likes          likes[]
+  post_comments  post_comments[]
+  posts          posts[]
+  profiles       profiles?
+  workspaces     workspaces[]    @relation("workspaces")
+
+  workspace_users workspace_users[] @relation(map: "workspace_users_user_id_users_id_fk")
+}
+
+model posts_to_tags {
+  post_id String @db.Uuid
+  tag_id  Int
+  post    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "posts_to_tags_post_id_posts_id_fk")
+  tag     tags   @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_to_tags_tag_id_tags_id_fk")
+
+  @@id([post_id, tag_id], map: "posts_to_tags_post_id_tags_id_pk")
+}
+
+model tags {
+  id            Int             @id @default(autoincrement())
+  name          String?         @unique(map: "idx_tags_name") @db.VarChar(30)
+  created_at    DateTime?       @default(now()) @db.Timestamptz(6)
+  posts_to_tags posts_to_tags[]
+}
+
+model files {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  name       String?   @db.VarChar(255)
+  path       String?
+  size       Int?
+  type       String?   @db.VarChar(255)
+  created_by String?   @db.Uuid
+  users      users?    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "files_created_by_users_id_fk")
+}
+
+model likes {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  post_id    String?   @db.Uuid
+  created_by String?   @db.Uuid
+  users      users?    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "likes_created_by_users_id_fk")
+  posts      posts?    @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "likes_post_id_posts_id_fk")
+
+  @@unique([post_id, created_by], map: "idx_like_post_id_created_by")
+}
+
+model profiles {
+  id         Int       @id @default(autoincrement())
+  user_id    String    @unique(map: "idx_profiles_user_id") @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  bio        String?
+  website    String?
+  phone      String?   @db.VarChar(50)
+  location   String?   @db.VarChar(255)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "profiles_user_id_users_id_fk")
+}
+
+model workspaces {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  name       String?   @db.VarChar(255)
+
+  users users[] @relation("workspaces")
+
+  workspace_users workspace_users[] @relation(map: "workspace_users_workspace_id_workspaces_id_fk")
+}
+
+model workspace_users {
+  workspace_id String     @unique(map: "idx_workspace_users_workspace_id") @db.Uuid
+  user_id      String     @unique(map: "idx_workspace_users_user_id") @db.Uuid
+  created_at   DateTime?  @db.Timestamptz(6)
+  updated_at   DateTime?  @db.Timestamptz(6)
+  deleted_at   DateTime?  @db.Timestamptz(6)
+  workspace    workspaces @relation(fields: [workspace_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "workspace_users_workspace_id_workspaces_id_fk")
+  user         users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "workspace_users_user_id_users_id_fk")
+
+  @@id([workspace_id, user_id], map: "workspace_users_workspace_id_user_id_pk")
+}
