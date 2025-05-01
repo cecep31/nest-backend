@@ -18,14 +18,14 @@ import { CreatePostDto } from './dto/create-post.dto';
   path: 'posts',
 })
 export class PostsController {
-  constructor(private postsService: PostsService) {}
+  constructor(private postsService: PostsService) { }
 
   @Get()
   async findAll(
     @Param('offset') offset: number = 0,
     @Param('limit') limit: number = 10,
   ) {
-    const {metadata, postsData} = await this.postsService.posts({ offset, limit })
+    const { metadata, postsData } = await this.postsService.posts({ offset, limit })
     return {
       success: true,
       message: 'Successfully fetched posts',
@@ -62,6 +62,7 @@ export class PostsController {
       return {
         success: false,
         message: 'Post not found',
+        data: []
       };
     }
     return {
