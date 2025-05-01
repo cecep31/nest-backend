@@ -10,12 +10,12 @@ export class UsersService {
   constructor(
     private prisma: PrismaService,
     private userRepository: UserRepository,
-  ) {}
-  
+  ) { }
+
   async hashPassword(password: string) {
     return await hash(password, 14);
   }
-  
+
   async create(createUserDto: CreateUserDto) {
     createUserDto.password = await this.hashPassword(createUserDto.password);
     return this.prisma.users.create({ data: createUserDto });
@@ -30,8 +30,8 @@ export class UsersService {
     return this.userRepository.findAll();
   }
 
-  async findByEmail(email: string) {
-    return this.prisma.users.findFirst({ where: { email: email } });
+  async findByEmailOrUsername(usernameOrEmail: string): Promise<users | null> {
+    return this.userRepository.findByUsernameOrEmail(usernameOrEmail);
   }
 
   async findOne(id: string) {

@@ -4,7 +4,7 @@ import { Prisma, users } from '../../../generated/prisma';
 
 @Injectable()
 export class UserRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(data: Prisma.usersCreateInput): Promise<users> {
     return this.prisma.users.create({ data });
@@ -32,6 +32,16 @@ export class UserRepository {
   async findByEmail(email: string): Promise<users | null> {
     return this.prisma.users.findUnique({
       where: { email },
+    });
+  }
+
+  async findByUsernameOrEmail(
+    usernameOrEmail: string,
+  ): Promise<users | null> {
+    return this.prisma.users.findFirst({
+      where: {
+        OR: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
+      },
     });
   }
 

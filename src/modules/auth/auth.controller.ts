@@ -21,13 +21,25 @@ import { LoginDto, LoginSchema } from './dto/login-dto';
   version: '1',
 })
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @UsePipes(new ZodValidationPipe(LoginSchema))
-  signIn(@Body() signInDto: LoginDto) {
-    return this.authService.signIn(signInDto.email, signInDto.password);
+  async signIn(@Body() signInDto: LoginDto) {
+    const data = await this.authService.signIn(signInDto.email, signInDto.password);
+    // return data;
+    if (!data) {
+      return {
+        success: false,
+        message: 'Invalid credentials',
+      };
+    }
+    return {
+      data,
+      success: true,
+      message: 'success',
+    };
   }
 
   @UseGuards(AuthGuard)

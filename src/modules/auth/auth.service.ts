@@ -10,14 +10,15 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   comparePassword(hash: string, password: string) {
     return compare(password, hash);
   }
 
   async signIn(email: string, password: string): Promise<any> {
-    const user = await this.userService.findByEmail(email);
+    const user = await this.userService.findByEmailOrUsername(email);
+    
     if (!user) {
       throw new UnauthorizedException();
     }
