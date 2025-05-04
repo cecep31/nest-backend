@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
@@ -11,9 +11,13 @@ import configuration from './config/configuration';
 import {DbModule} from './db/db.module'
 import { MeModule } from './modules/me/me.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { LoggerMiddleware } from './common/logger/logger.middleware';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from './config/winston';
 
 @Module({
   imports: [
+    WinstonModule.forRoot(winstonConfig),
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
@@ -30,4 +34,8 @@ import { AdminModule } from './modules/admin/admin.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
