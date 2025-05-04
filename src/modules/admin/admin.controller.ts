@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { SupeAdminGuard } from '../auth/superadmin.guard';
 
-@UseGuards(AuthGuard,SupeAdminGuard)
+@UseGuards(AuthGuard, SupeAdminGuard)
 @Controller({
   version: '1',
   path: 'admin',
