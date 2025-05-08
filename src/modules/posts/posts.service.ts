@@ -101,4 +101,11 @@ export class PostsService {
     const newpost = await this.prisma.posts.create({ data: post });
     return newpost;
   }
+  async updatePublishPost(post_id: string, published: boolean = true) {
+    const post = await this.prisma.posts.update({
+      where: { id: post_id },
+      data: { published },
+    });
+    return post;
+  }
 }

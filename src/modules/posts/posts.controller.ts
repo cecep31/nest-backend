@@ -4,7 +4,9 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ import { PostsService } from './posts.service';
 import { SupeAdminGuard } from '../auth/superadmin.guard';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreatePostDto } from './dto/create-post.dto';
+import { query } from 'winston';
 
 @Controller({
   version: '1',
@@ -90,5 +93,16 @@ export class PostsController {
       message: 'Successfully created post',
       data: await this.postsService.createPost(createPostDto, req.user.user_id),
     };
+  }
+
+  @UseGuards(AuthGuard, SupeAdminGuard)
+  @Patch('publish')
+  async updatePublishPost(@Param('id') id: string, @Query('published') published: boolean = true) {
+
+    return {
+      success: true,
+      message: 'Successfully updated post',
+      data: await this.postsService.updatePublishPost(id, published),
+    }
   }
 }
