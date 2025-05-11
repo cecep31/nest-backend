@@ -1,4 +1,4 @@
-import { Inject, Injectable, InternalServerErrorException, Logger, StreamableFile } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Client } from 'minio';
 

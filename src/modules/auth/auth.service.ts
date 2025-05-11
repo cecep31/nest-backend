@@ -16,22 +16,35 @@ export class AuthService {
     return compare(password, hash);
   }
 
-  async signIn(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findByEmailOrUsername(email);
+    
+    if (!user) {
+      return null;
+    }
+
+    const isPasswordValid = await this.comparePassword(user.password ?? '', password);
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    const { password: _, ...result } = user;
+    return result;
+  }
+
+  async signIn(email: string, password: string): Promise<any> {
+    const user = await this.validateUser(email, password);
     
     if (!user) {
       throw new UnauthorizedException();
     }
-    const compare = await this.comparePassword(user.password ?? '', password);
 
-    if (!compare) {
-      throw new UnauthorizedException();
-    }
     const payload = {
       user_id: user.id,
       email: user.email,
       issuperadmin: user.is_super_admin,
     };
+
     return {
       access_token: await this.jwtService.signAsync(payload),
       user: {

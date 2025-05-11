@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
@@ -12,9 +11,10 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { LoginDto, LoginSchema } from './dto/login-dto';
+import { LoginSchema } from './dto/login-dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller({
   path: 'auth',
@@ -25,10 +25,10 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
+  @UseGuards(LocalAuthGuard)
   @UsePipes(new ZodValidationPipe(LoginSchema))
-  async signIn(@Body() signInDto: LoginDto) {
-    const data = await this.authService.signIn(signInDto.email, signInDto.password);
-    // return data;
+  async signIn(@Request() req) {
+    const data = await this.authService.signIn(req.user.email, req.body.password);
     if (!data) {
       return {
         success: false,
@@ -42,14 +42,14 @@ export class AuthController {
     };
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('profile')
   getProfile(@Request() req) {
     return this.authService.profile(req.user);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('refresh-token')
   refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user);

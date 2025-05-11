@@ -2,14 +2,12 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { CreateUserDto, UpdateUserDto, ResetPasswordDto } from './schemas/user.schema';
 import { hash } from "bcrypt";
 import { PrismaService } from '../../db/prisma.service';
-import { UserRepository } from './users.repository';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class UsersService {
   constructor(
     private prisma: PrismaService,
-    private userRepository: UserRepository,
   ) { }
 
   async hashPassword(password: string) {

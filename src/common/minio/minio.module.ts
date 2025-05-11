@@ -1,4 +1,4 @@
-import { Module, Global, DynamicModule } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { MinioService } from './minio.service';
 
 @Global()

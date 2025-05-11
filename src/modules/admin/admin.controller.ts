@@ -1,9 +1,9 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { AuthGuard } from '../auth/auth.guard';
-import { SupeAdminGuard } from '../auth/superadmin.guard';
+import { SupeAdminGuard } from '../auth/guards/superadmin.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@UseGuards(AuthGuard, SupeAdminGuard)
+@UseGuards(JwtAuthGuard, SupeAdminGuard)
 @Controller({
   version: '1',
   path: 'admin',
