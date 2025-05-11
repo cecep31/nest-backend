@@ -56,6 +56,17 @@ export class PostsController {
       data: await this.postsService.getPostRandom(limit),
     };
   }
+  @Get("mine")
+  @UseGuards(JwtAuthGuard)
+  async getPostsByCreator(@Request() req, @Param('offset') offset: number = 0, @Param('limit') limit: number = 10) {
+    const { metadata, posts } = await this.postsService.getPostsMine(req.user.user_id, offset, limit);
+    return {
+      success: true,
+      message: 'Successfully fetched posts',
+      data: posts,
+      metadata
+    }
+  }
 
   @Get(':id')
   async post(@Param('id') id: string) {
@@ -97,11 +108,12 @@ export class PostsController {
   @UseGuards(JwtAuthGuard, SupeAdminGuard)
   @Patch('publish')
   async updatePublishPost(@Param('id') id: string, @Query('published') published: boolean = true) {
-
     return {
       success: true,
       message: 'Successfully updated post',
       data: await this.postsService.updatePublishPost(id, published),
     }
   }
+
+
 }

@@ -8,7 +8,7 @@ export class PostsService {
   constructor(
     private prisma: PrismaService,
     private postsRepository: PostsRepository,
-  ) {}
+  ) { }
 
   private truncateBody(body?: string, maxLength: number = 200): string {
     if (!body) return '';
@@ -57,6 +57,14 @@ export class PostsService {
         totalItems: totalposts,
       },
     };
+  }
+
+  async getPostsMine(user_id: string, offset = 0, limit = 10) {
+    const posts = await this.postsRepository.getPostsByCreator(user_id, offset, limit);
+    const metadata = {
+      totalItems: await this.postsRepository.getPostsByCreatorCount(user_id),
+    }
+    return { posts, metadata };
   }
 
   findById(id: string) {
