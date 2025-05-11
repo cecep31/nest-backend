@@ -3,11 +3,13 @@ import { CreateUserDto, UpdateUserDto, ResetPasswordDto } from './schemas/user.s
 import { hash } from "bcrypt";
 import { PrismaService } from '../../db/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     private prisma: PrismaService,
+    private userReposistory: UserRepository,
   ) { }
 
   async hashPassword(password: string) {
@@ -72,6 +74,16 @@ export class UsersService {
       }
       throw error;
     }
+  }
+
+  async getMyProfile(id: string) {
+    const user = await this.userReposistory.FindUserById(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    
+    // Return the cached user data instead of making another DB query
+    return user;
   }
 
   async resetPassword(id: string, resetPasswordDto: ResetPasswordDto) {

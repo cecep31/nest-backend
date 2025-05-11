@@ -11,6 +11,7 @@ import {
   ClassSerializerInterceptor,
   HttpCode,
   ParseUUIDPipe,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto, ResetPasswordDto, createUserSchema, updateUserSchema, resetPasswordSchema } from './schemas/user.schema';
@@ -23,7 +24,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 @UseGuards(JwtAuthGuard, SupeAdminGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   create(@Body(new ZodValidationPipe(createUserSchema)) createUserDto: CreateUserDto) {
@@ -51,6 +52,16 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getMe(@Req() req: any) {
+    const user = await this.usersService.getMyProfile(req.user.user_id);
+    return {
+      succcess: true,
+      data: user,
+    };
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne(id);
@@ -61,4 +72,6 @@ export class UsersController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.remove(id);
   }
+
+
 }

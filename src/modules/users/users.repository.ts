@@ -66,6 +66,20 @@ export class UserRepository {
     return this.prisma.users.delete({ where });
   }
 
+  async FindUserById(id: string) {
+    return this.prisma.users.findUnique({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        image: true,
+        created_at: true,
+        updated_at: true,
+      },
+      where: { id },
+    });
+  }
+
   async softDelete(id: string): Promise<users> {
     return this.prisma.users.update({
       where: { id },
