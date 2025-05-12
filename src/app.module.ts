@@ -14,6 +14,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './config/winston';
+import { TagsModule } from './modules/tags/tags.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { winstonConfig } from './config/winston';
     WorkspacesModule,
     DbModule,
     MeModule,
-    AdminModule
+    AdminModule,
+    TagsModule
   ],
   controllers: [AppController],
   providers: [AppService],
