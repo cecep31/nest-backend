@@ -8,13 +8,14 @@ import { ConfigModule } from '@nestjs/config';
 import { PagesModule } from './modules/note/pages/pages.module';
 import { WorkspacesModule } from './modules/note/workspaces/workspaces.module';
 import configuration from './config/configuration';
-import {DbModule} from './db/db.module'
+import { DbModule } from './db/db.module';
 import { MeModule } from './modules/me/me.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './config/winston';
 import { TagsModule } from './modules/tags/tags.module';
+import { WriterModule } from './modules/writer/writer.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { TagsModule } from './modules/tags/tags.module';
     DbModule,
     MeModule,
     AdminModule,
-    TagsModule
+    TagsModule,
+    WriterModule,
   ],
   controllers: [AppController],
   providers: [AppService],

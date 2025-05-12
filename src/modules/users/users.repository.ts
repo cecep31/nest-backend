@@ -45,9 +45,21 @@ export class UserRepository {
     });
   }
 
-  async findByUsername(username: string): Promise<users | null> {
-    return this.prisma.users.findUnique({
-      where: { username },
+  async findByUsername(username: string) {
+    return await this.prisma.users.findUnique({
+      where: { username, deleted_at: null },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        image: true,
+        created_at: true,
+        updated_at: true,
+        deleted_at: true,
+        first_name: true,
+        last_name: true,
+        is_super_admin: true,
+      },
     });
   }
 
