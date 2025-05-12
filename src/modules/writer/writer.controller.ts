@@ -9,7 +9,12 @@ export class WriterController {
   constructor(private readonly writerService: WriterService) {}
 
   @Get(':username')
-  getWriterByUserName(@Param('username') username: string) {
-    return this.writerService.getWriterByUserName(username);
+  async getWriterByUserName(@Param('username') username: string) {
+    const writer = await this.writerService.getWriterByUserName(username);
+    return {
+      message: 'Writer fetched successfully',
+      status: true,
+      data: writer,
+    };
   }
 }
