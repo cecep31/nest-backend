@@ -13,7 +13,7 @@ import {
 import { PostsService } from './posts.service';
 import { SupeAdminGuard } from '../auth/guards/superadmin.guard';
 import { CreatePostDto } from './dto/create-post.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller({
   version: '1',
@@ -57,7 +57,7 @@ export class PostsController {
     };
   }
   @Get("mine")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   async getPostsByCreator(@Request() req, @Param('offset') offset: number = 0, @Param('limit') limit: number = 10) {
     const { metadata, posts } = await this.postsService.getPostsMine(req.user.user_id, offset, limit);
     return {
@@ -85,7 +85,7 @@ export class PostsController {
     };
   }
 
-  @UseGuards(JwtAuthGuard, SupeAdminGuard)
+  @UseGuards(AuthGuard, SupeAdminGuard)
   @Delete(':id')
   async deletePost(@Param('id') id: string) {
     return {
@@ -95,7 +95,7 @@ export class PostsController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   @Post()
   async createPost(@Body() createPostDto: CreatePostDto, @Request() req) {
     return {
@@ -105,7 +105,7 @@ export class PostsController {
     };
   }
 
-  @UseGuards(JwtAuthGuard, SupeAdminGuard)
+  @UseGuards(AuthGuard, SupeAdminGuard)
   @Patch('publish')
   async updatePublishPost(@Param('id') id: string, @Query('published') published: boolean = true) {
     return {

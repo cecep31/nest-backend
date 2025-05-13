@@ -18,10 +18,10 @@ import { CreateUserDto, UpdateUserDto, ResetPasswordDto, createUserSchema, updat
 // import { AuthGuard } from '../auth/auth.guard';
 import { SupeAdminGuard } from '../auth/guards/superadmin.guard';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller({ path: 'users', version: '1' })
-@UseGuards(JwtAuthGuard, SupeAdminGuard)
+@UseGuards(AuthGuard, SupeAdminGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -52,7 +52,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   @Get('me')
   async getMe(@Req() req: any) {
     const user = await this.usersService.getMyProfile(req.user.user_id);

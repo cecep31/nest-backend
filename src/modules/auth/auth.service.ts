@@ -57,7 +57,7 @@ export class AuthService {
 
   async verifyToken(token: string) {
     return await this.jwtService.verifyAsync(token, {
-      secret: this.configService.get<string>('jwt_secret'),
+      secret: this.configService.get<string>('jwt_secret'), 
     });
   }
 

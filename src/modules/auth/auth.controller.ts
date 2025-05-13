@@ -11,8 +11,8 @@ import {
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { LoginSchema } from './dto/login-dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+// import { LocalAuthGuard } from './guards/local-auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller({
   path: 'auth',
@@ -22,11 +22,10 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  @UseGuards(LocalAuthGuard)
   @UsePipes(new ZodValidationPipe(LoginSchema))
   async signIn(@Request() req) {
     const data = await this.authService.signIn(
-      req.user.email,
+      req.body.email,
       req.body.password,
     );
     if (!data) {
@@ -42,14 +41,14 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('profile')
   getProfile(@Request() req) {
     return this.authService.profile(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   @Post('refresh-token')
   refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user);
