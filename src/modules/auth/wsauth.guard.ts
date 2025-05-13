@@ -22,7 +22,7 @@ export class WsAuthGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_SECRET'),
+        secret: this.configService.get<string>('jwt_secret'),
       });
       request['user'] = payload;
     } catch (error) {
