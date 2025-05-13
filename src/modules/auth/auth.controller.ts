@@ -1,8 +1,6 @@
 import {
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
   Post,
   Request,
   UseGuards,
@@ -21,14 +19,16 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
   version: '1',
 })
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Post('login')
   @UseGuards(LocalAuthGuard)
   @UsePipes(new ZodValidationPipe(LoginSchema))
   async signIn(@Request() req) {
-    const data = await this.authService.signIn(req.user.email, req.body.password);
+    const data = await this.authService.signIn(
+      req.user.email,
+      req.body.password,
+    );
     if (!data) {
       return {
         success: false,

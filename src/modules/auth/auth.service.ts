@@ -42,7 +42,7 @@ export class AuthService {
     const payload = {
       user_id: user.id,
       email: user.email,
-      issuperadmin: user.is_super_admin,
+      isSuperAdmin: user.is_super_admin,
     };
 
     return {
