@@ -74,6 +74,26 @@ export class UserRepository {
     });
   }
 
+  async getAllUsers(params: {
+    skip?: number;
+    take?: number;
+    where?: Prisma.usersWhereInput;
+    orderBy?: Prisma.usersOrderByWithRelationInput;
+  }): Promise<users[]> {
+    const { skip, take, where, orderBy } = params || {};
+    return this.prisma.users.findMany({
+      skip,
+      take,
+      where,
+      orderBy,
+    });
+  }
+
+  async getAllUsersCount(where?: Prisma.usersWhereInput): Promise<number> {
+    return this.prisma.users.count({ where });
+  }
+
+
   async delete(where: Prisma.usersWhereUniqueInput): Promise<users> {
     return this.prisma.users.delete({ where });
   }

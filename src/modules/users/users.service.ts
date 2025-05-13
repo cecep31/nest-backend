@@ -105,17 +105,20 @@ export class UsersService {
     });
   }
 
-  async findAll() {
-    return await this.prisma.users.findMany({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        image: true,
-        created_at: true,
-        updated_at: true,
-      },
+  async findAll(offset: number, limit: number) {
+    const users = await this.userReposistory.getAllUsers({
+      skip: offset,
+      take: limit,
     });
+    const total = await this.userReposistory.getAllUsersCount();
+    return {
+      users,
+      metadata: {
+        totalItems: total,
+        offset,
+        limit,
+      },
+    };
   }
 
   async findByEmailOrUsername(usernameOrEmail: string) {
