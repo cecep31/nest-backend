@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { LoginSchema } from './dto/login-dto';
+import { loginSchema } from './schemas/loogin-schema';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -23,7 +23,7 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  @UsePipes(new ZodValidationPipe(LoginSchema))
+  @UsePipes(new ZodValidationPipe(loginSchema))
   async signIn(@Request() req) {
     const data = await this.authService.signIn(
       req.user.email,
