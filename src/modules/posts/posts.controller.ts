@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { SupeAdminGuard } from '../auth/guards/superadmin.guard';
+import { SuperAdminGuard } from '../auth/guards/superadmin.guard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -85,7 +85,7 @@ export class PostsController {
     };
   }
 
-  @UseGuards(JwtAuthGuard, SupeAdminGuard)
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @Delete(':id')
   async deletePost(@Param('id') id: string) {
     return {
@@ -105,7 +105,7 @@ export class PostsController {
     };
   }
 
-  @UseGuards(JwtAuthGuard, SupeAdminGuard)
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
   @Patch('publish')
   async updatePublishPost(@Param('id') id: string, @Query('published') published: boolean = true) {
     return {

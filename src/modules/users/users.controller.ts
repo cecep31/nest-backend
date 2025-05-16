@@ -23,12 +23,12 @@ import {
   updateUserSchema,
   resetPasswordSchema,
 } from './schemas/user.schema';
-import { SupeAdminGuard } from '../auth/guards/superadmin.guard';
+import { SuperAdminGuard } from '../auth/guards/superadmin.guard';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller({ path: 'users', version: '1' })
-@UseGuards(JwtAuthGuard, SupeAdminGuard)
+@UseGuards(JwtAuthGuard, SuperAdminGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
