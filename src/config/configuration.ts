@@ -7,5 +7,5 @@ export default () => ({
   useSSLMinio: process.env.MINIO_USE_SSL === 'true',
   accessKeyMinio: process.env.MINIO_ACCESS_KEY || 'minio',
   secretKeyMinio: process.env.MINIO_SECRET_KEY || 'minio123',
-  bucketMinio: process.env.MINIO_BUCKET || 'nest',
+  bucketMinio: process.env.MINIO_BUCKET || 'pilput-storage',
 });
