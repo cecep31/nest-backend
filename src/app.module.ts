@@ -16,6 +16,7 @@ import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './config/winston';
 import { TagsModule } from './modules/tags/tags.module';
 import { WriterModule } from './modules/writer/writer.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { WriterModule } from './modules/writer/writer.module';
     AdminModule,
     TagsModule,
     WriterModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
