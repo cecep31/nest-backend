@@ -8,6 +8,10 @@ export default () => ({
   accessKeyMinio: process.env.MINIO_ACCESS_KEY || 'minio',
   secretKeyMinio: process.env.MINIO_SECRET_KEY || 'minio123',
   bucketMinio: process.env.MINIO_BUCKET || 'pilput-storage',
+  throttler: {
+    ttl: parseInt(process.env.THROTTLE_TTL || '60', 10), // 1 minute
+    limit: parseInt(process.env.THROTTLE_LIMIT || '10', 10), // 10 requests per minute
+  },
   openrouter: {
     apiKey: process.env.OPENROUTER_API_KEY || '',
     baseUrl: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',

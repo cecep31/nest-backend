@@ -4,7 +4,7 @@ import { Prisma, posts } from '../../../generated/prisma';
 
 @Injectable()
 export class PostsRepository {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.postsCreateInput): Promise<posts> {
     return this.prisma.posts.create({ data });
@@ -56,11 +56,20 @@ export class PostsRepository {
             tag: true,
           },
         },
-
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            first_name: true,
+            last_name: true,
+            image: true,
+          },
+        },
       },
       skip: offset,
       take: limit,
-    })
+    });
   }
 
   async getPostsByCreatorCount(creator_id: string) {
@@ -69,7 +78,7 @@ export class PostsRepository {
         created_by: creator_id,
         deleted_at: null,
       },
-    })
+    });
   }
 
   async findBySlug(slug: string): Promise<posts | null> {

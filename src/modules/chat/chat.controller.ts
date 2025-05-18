@@ -8,6 +8,7 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -34,6 +35,7 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Post('conversations')
+  @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 requests per minute for creating conversations
   createConversation(
     @Req() req: RequestWithUser,
     @Body(new ZodValidationPipe(createConversationSchema))
@@ -46,6 +48,7 @@ export class ChatController {
   }
 
   @Post('conversations/:id/messages')
+  @Throttle({ default: { limit: 10, ttl: 60000 } }) // 10 requests per minute for sending messages
   sendMessage(
     @Req() req: RequestWithUser,
     @Param('id') conversationId: string,

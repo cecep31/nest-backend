@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PostsModule } from './modules/posts/posts.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PagesModule } from './modules/note/pages/pages.module';
 import { WorkspacesModule } from './modules/note/workspaces/workspaces.module';
 import configuration from './config/configuration';
@@ -17,6 +17,8 @@ import { winstonConfig } from './config/winston';
 import { TagsModule } from './modules/tags/tags.module';
 import { WriterModule } from './modules/writer/writer.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -24,6 +26,16 @@ import { ChatModule } from './modules/chat/chat.module';
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        throttlers: [{
+          ttl: config.get<number>('throttler.ttl', 60),
+          limit: config.get<number>('throttler.limit', 10),
+        }],
+      }),
     }),
     UsersModule,
     AuthModule,
@@ -38,7 +50,13 @@ import { ChatModule } from './modules/chat/chat.module';
     ChatModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
