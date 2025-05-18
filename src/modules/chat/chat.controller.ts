@@ -19,10 +19,11 @@ interface RequestWithUser extends Request {
   };
 }
 import { ChatService } from './services/chat.service';
-import { CreateConversationDto } from './dto/create-conversation.dto';
-import { SendMessageDto } from './dto/send-message.dto';
+import { CreateConversationDto, createConversationSchema } from './dto/create-conversation.dto';
+import { SendMessageDto, sendMessageSchema } from './dto/send-message.dto';
 import { ConversationResponseDto } from './dto/conversation-response.dto';
 import { MessageResponseDto } from './dto/conversation-response.dto';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 
 @Controller({
   path: 'chat',
@@ -35,7 +36,8 @@ export class ChatController {
   @Post('conversations')
   createConversation(
     @Req() req: RequestWithUser,
-    @Body() createConversationDto: CreateConversationDto,
+    @Body(new ZodValidationPipe(createConversationSchema))
+    createConversationDto: CreateConversationDto,
   ): Promise<ConversationResponseDto> {
     return this.chatService.createConversation(
       req.user.user_id,
@@ -47,7 +49,8 @@ export class ChatController {
   sendMessage(
     @Req() req: RequestWithUser,
     @Param('id') conversationId: string,
-    @Body() sendMessageDto: SendMessageDto,
+    @Body(new ZodValidationPipe(sendMessageSchema))
+    sendMessageDto: SendMessageDto,
   ): Promise<MessageResponseDto> {
     return this.chatService.sendMessage(
       req.user.user_id,
@@ -57,7 +60,9 @@ export class ChatController {
   }
 
   @Get('conversations')
-  listConversations(@Req() req: RequestWithUser): Promise<ConversationResponseDto[]> {
+  listConversations(
+    @Req() req: RequestWithUser,
+  ): Promise<ConversationResponseDto[]> {
     return this.chatService.listConversations(req.user.user_id);
   }
 
@@ -74,6 +79,9 @@ export class ChatController {
     @Req() req: RequestWithUser,
     @Param('id') conversationId: string,
   ): Promise<void> {
-    return this.chatService.deleteConversation(req.user.user_id, conversationId);
+    return this.chatService.deleteConversation(
+      req.user.user_id,
+      conversationId,
+    );
   }
 }

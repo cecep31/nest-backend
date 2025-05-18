@@ -4,9 +4,10 @@ import { PrismaService } from '../../../db/prisma.service';
 import { OpenRouterService } from './openrouter.service';
 import { CreateConversationDto } from '../dto/create-conversation.dto';
 import { SendMessageDto } from '../dto/send-message.dto';
-import { ConversationResponseDto, MessageResponseDto } from '../dto/conversation-response.dto';
-
-
+import {
+  ConversationResponseDto,
+  MessageResponseDto,
+} from '../dto/conversation-response.dto';
 
 @Injectable()
 export class ChatService {
@@ -18,7 +19,9 @@ export class ChatService {
     private readonly openRouterService: OpenRouterService,
     private readonly configService: ConfigService,
   ) {
-    this.defaultModel = this.configService.get('openrouter.defaultModel') || 'openai/gpt-3.5-turbo';
+    this.defaultModel =
+      this.configService.get('openrouter.defaultModel') ||
+      'deepseek/deepseek-prover-v2:free';
   }
 
   async createConversation(
@@ -51,13 +54,13 @@ export class ChatService {
     ]);
 
     return this.formatConversationResponse(conversation, [
-      { 
-        ...userMessage, 
-        model: null, 
-        prompt_tokens: null, 
-        completion_tokens: null, 
+      {
+        ...userMessage,
+        model: null,
+        prompt_tokens: null,
+        completion_tokens: null,
         total_tokens: null,
-        conversation_id: conversation.id
+        conversation_id: conversation.id,
       },
       aiResponse,
     ]);
@@ -77,7 +80,6 @@ export class ChatService {
       throw new NotFoundException('Conversation not found');
     }
 
-
     // Get previous messages for context
     const previousMessages = await this.prisma.chat_messages.findMany({
       where: { conversation_id: conversationId },
@@ -95,10 +97,15 @@ export class ChatService {
     ];
 
     // Get AI response
-    const aiResponse = await this.getAiResponse(userId, conversationId, messages, {
-      model: sendMessageDto.model,
-      temperature: sendMessageDto.temperature,
-    });
+    const aiResponse = await this.getAiResponse(
+      userId,
+      conversationId,
+      messages,
+      {
+        model: sendMessageDto.model,
+        temperature: sendMessageDto.temperature,
+      },
+    );
 
     return aiResponse;
   }
@@ -140,7 +147,10 @@ export class ChatService {
     );
   }
 
-  async deleteConversation(userId: string, conversationId: string): Promise<void> {
+  async deleteConversation(
+    userId: string,
+    conversationId: string,
+  ): Promise<void> {
     await this.prisma.$transaction([
       this.prisma.chat_messages.deleteMany({
         where: { conversation_id: conversationId },
@@ -158,11 +168,16 @@ export class ChatService {
     options: { model?: string; temperature?: number } = {},
   ): Promise<MessageResponseDto> {
     try {
-      const response = await this.openRouterService.createChatCompletion(messages, {
-        model: options.model || this.defaultModel,
-        temperature: options.temperature,
-      });
+      const response = await this.openRouterService.createChatCompletion(
+        messages,
+        {
+          model: options.model || this.defaultModel,
+          temperature: options.temperature,
+        },
+      );
 
+      console.log(response);
+      
       const aiMessage = response.choices[0]?.message;
       const usage = response.usage;
 

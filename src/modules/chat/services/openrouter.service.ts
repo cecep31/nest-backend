@@ -2,11 +2,11 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { 
-  OpenRouterMessage, 
-  OpenRouterRequest, 
-  OpenRouterResponse, 
-  OpenRouterErrorResponse 
+import {
+  OpenRouterMessage,
+  OpenRouterRequest,
+  OpenRouterResponse,
+  OpenRouterErrorResponse,
 } from '../interfaces/openrouter.types';
 
 interface OpenRouterConfig {
@@ -64,7 +64,7 @@ export class OpenRouterService {
           data,
           {
             headers: {
-              'Authorization': `Bearer ${this.config.apiKey}`,
+              Authorization: `Bearer ${this.config.apiKey}`,
               'Content-Type': 'application/json',
             },
           },
@@ -74,14 +74,14 @@ export class OpenRouterService {
       return response.data;
     } catch (error: any) {
       this.logger.error('Error calling OpenRouter API:', error);
-      
+
       if (error.response?.data) {
         const errorData = error.response.data as OpenRouterErrorResponse;
         throw new Error(
           `OpenRouter API error: ${errorData.error?.message || 'Unknown error'}`,
         );
       }
-      
+
       throw new Error('Failed to get response from OpenRouter API');
     }
   }
