@@ -8,7 +8,7 @@ export class PostsService {
   constructor(
     private prisma: PrismaService,
     private postsRepository: PostsRepository,
-  ) { }
+  ) {}
 
   private truncateBody(body?: string, maxLength: number = 200): string {
     if (!body) return '';
@@ -60,10 +60,14 @@ export class PostsService {
   }
 
   async getPostsMine(user_id: string, offset = 0, limit = 10) {
-    const posts = await this.postsRepository.getPostsByCreator(user_id, offset, limit);
+    const posts = await this.postsRepository.getPostsByCreator(
+      user_id,
+      offset,
+      limit,
+    );
     const metadata = {
       totalItems: await this.postsRepository.getPostsByCreatorCount(user_id),
-    }
+    };
     return { posts, metadata };
   }
 
@@ -106,7 +110,16 @@ export class PostsService {
       creator_id: user_id,
       created_at: new Date(),
     };
-    const newpost = await this.prisma.posts.create({ data: post });
+    const newpost = await this.prisma.posts.create({
+      data: {
+        ...post,
+        tags: {
+          create: post.tags.map((tag) => ({
+            tag_id: tag.id,
+          })),
+        },
+      },
+    });
     return newpost;
   }
   async updatePublishPost(post_id: string, published: boolean = true) {

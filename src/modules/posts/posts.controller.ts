@@ -12,8 +12,9 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { SuperAdminGuard } from '../auth/guards/superadmin.guard';
-import { CreatePostDto } from './dto/create-post.dto';
+import { CreatePostDto, CreatePostSchema } from './dto/create-post.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 
 @Controller({
   version: '1',
@@ -97,7 +98,7 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createPost(@Body() createPostDto: CreatePostDto, @Request() req) {
+  async createPost(@Body(new ZodValidationPipe(CreatePostSchema)) createPostDto: CreatePostDto, @Request() req) {
     return {
       success: true,
       message: 'Successfully created post',
