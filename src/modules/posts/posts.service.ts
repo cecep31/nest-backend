@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { post_comments } from '../../../generated/prisma';
 import { PrismaService } from '../../db/prisma.service';
 import { PostsRepository } from './posts.repository';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -104,20 +105,17 @@ export class PostsService {
     return this.prisma.posts.delete({ where: { id: post_id } });
   }
 
-  async createPost(postData: any, user_id: string) {
-    const post = {
-      ...postData,
-      creator_id: user_id,
-      created_at: new Date(),
-    };
+  async createPost(postData: CreatePostDto, user_id: string) {
+    // remove property tags
+
     const newpost = await this.prisma.posts.create({
       data: {
-        ...post,
-        tags: {
-          create: post.tags.map((tag) => ({
-            tag_id: tag.id,
-          })),
-        },
+        created_by: user_id,
+        created_at: new Date(),
+        title: postData.title,
+        body: postData.body,
+        slug: postData.slug,
+        published: true,
       },
     });
     return newpost;
