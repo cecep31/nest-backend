@@ -1,4 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../db/prisma.service';
 import { OpenRouterService } from './openrouter.service';
@@ -11,6 +12,49 @@ import {
 
 @Injectable()
 export class ChatService {
+  /**
+   * Stream AI response as Observable<string> for SSE
+   */
+  streamMessage(
+    userId: string,
+    conversationId: string,
+    sendMessageDto: SendMessageDto
+  ): Observable<string> {
+    return new Observable<string>(observer => {
+      (async () => {
+      // Verify conversation exists and belongs to user
+      const conversation = await this.prisma.chat_conversations.findUnique({
+        where: { id: conversationId, user_id: userId },
+      });
+      if (!conversation) {
+        observer.error(new NotFoundException('Conversation not found'));
+        return;
+      }
+      // Get previous messages for context
+      const previousMessages = await this.prisma.chat_messages.findMany({
+        where: { conversation_id: conversationId },
+        orderBy: { created_at: 'asc' },
+        take: 10,
+      });
+      const messages = [
+        ...previousMessages.map((msg) => ({
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+        })),
+        { role: 'user' as const, content: sendMessageDto.content },
+      ];
+      // Stream from OpenRouterService
+      this.openRouterService.createChatCompletionStream(messages, {
+        model: sendMessageDto.model,
+        temperature: sendMessageDto.temperature,
+      }).subscribe({
+        next: chunk => observer.next(chunk),
+        error: err => observer.error(err),
+        complete: () => observer.complete(),
+      });
+    })();
+  });
+  }
   private readonly logger = new Logger(ChatService.name);
   private readonly defaultModel: string;
 

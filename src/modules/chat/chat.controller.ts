@@ -26,6 +26,8 @@ import { ConversationResponseDto } from './dto/conversation-response.dto';
 import { MessageResponseDto } from './dto/conversation-response.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 
+import { Sse } from '@nestjs/common';
+import { map } from 'rxjs/operators';
 @Controller({
   path: 'chat',
   version: '1',
@@ -85,6 +87,21 @@ export class ChatController {
     return this.chatService.deleteConversation(
       req.user.user_id,
       conversationId,
+    );
+  }
+
+  @Sse('conversations/:id/messages/stream')
+  streamMessage(
+    @Req() req: RequestWithUser,
+    @Param('id') conversationId: string,
+    @Body(new ZodValidationPipe(sendMessageSchema)) sendMessageDto: SendMessageDto,
+  ) {
+    return this.chatService.streamMessage(
+      req.user.user_id,
+      conversationId,
+      sendMessageDto,
+    ).pipe(
+      map(chunk => ({ data: chunk }))
     );
   }
 }
