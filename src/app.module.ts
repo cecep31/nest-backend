@@ -19,6 +19,7 @@ import { WriterModule } from './modules/writer/writer.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ArticleModule } from './modules/article/article.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { APP_GUARD } from '@nestjs/core';
     TagsModule,
     WriterModule,
     ChatModule,
+    ArticleModule
   ],
   controllers: [AppController],
   providers: [
