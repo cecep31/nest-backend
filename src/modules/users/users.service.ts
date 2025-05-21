@@ -19,7 +19,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     try {
       const hashedPassword = await this.hashPassword(createUserDto.password);
-      return await this.prisma.users.create({
+      const user = await this.prisma.users.create({
         data: {
           ...createUserDto,
           password: hashedPassword,
@@ -31,8 +31,14 @@ export class UsersService {
           image: true,
           created_at: true,
           updated_at: true,
+          deleted_at: true,
+          first_name: true,
+          last_name: true,
+          password: true,
+          is_super_admin: true,
         },
       });
+      return user;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -128,6 +134,19 @@ export class UsersService {
           { email: usernameOrEmail },
           { username: usernameOrEmail },
         ],
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        image: true,
+        created_at: true,
+        updated_at: true,
+        deleted_at: true,
+        first_name: true,
+        last_name: true,
+        password: true,
+        is_super_admin: true,
       },
     });
   }

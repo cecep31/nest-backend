@@ -7,13 +7,16 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Body,
+  Req,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { LoginDto, loginSchema } from './schemas/loogin-schema';
 // import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-
+import { AuthGuard } from '@nestjs/passport';
 @Controller({
   path: 'auth',
   version: '1',
@@ -47,6 +50,30 @@ export class AuthController {
   @Get('profile')
   getProfile(@Request() req) {
     return this.authService.profile(req.user);
+  }
+
+  // --- GitHub OAuth ---
+  @Get('github')
+  @UseGuards(AuthGuard('github'))
+  async githubLogin() {
+    // Redirect handled by Passport
+  }
+
+  @Get('github/callback')
+  @UseGuards(AuthGuard('github'))
+  async githubCallback(@Req() req, @Res() res) {
+    // Successful authentication, issue JWT and return user info
+    // req.user is set by GithubStrategy.validate()
+    if (!req.user) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'GitHub authentication failed' });
+    }
+    // You can customize the redirect or response as needed:
+    // For API: return JWT and user info
+    return res.status(HttpStatus.OK).json({
+      success: true,
+      data: req.user,
+      message: 'GitHub login successful',
+    });
   }
 
   @UseGuards(JwtAuthGuard)
