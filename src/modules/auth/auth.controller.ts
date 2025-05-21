@@ -10,6 +10,7 @@ import {
   Req,
   Res,
   HttpStatus,
+  Redirect,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -69,11 +70,7 @@ export class AuthController {
     }
     // You can customize the redirect or response as needed:
     // For API: return JWT and user info
-    return res.status(HttpStatus.OK).json({
-      success: true,
-      data: req.user,
-      message: 'GitHub login successful',
-    });
+    return Redirect("https://pilput.me");
   }
 
   @UseGuards(JwtAuthGuard)
