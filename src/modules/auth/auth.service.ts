@@ -26,11 +26,6 @@ export class AuthService {
     // Try to find user by email or username
     let user = email ? await this.userService.findByEmailOrUsername(email) : null;
 
-    // If not found, try to find by username
-    if (!user && username) {
-      user = await this.userService.findByEmailOrUsername(username);
-    }
-
     // If still not found, create new user
     if (!user) {
       user = await this.userService.create({

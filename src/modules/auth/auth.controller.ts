@@ -82,7 +82,7 @@ export class AuthController {
 
     // You can customize the redirect or response as needed:
     // For API: return JWT and user info
-    return Redirect('https://pilput.me');
+    res.redirect('https://pilput.me');
   }
 
   @UseGuards(JwtAuthGuard)
