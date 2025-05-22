@@ -10,12 +10,19 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
   /**
    * Validate or register user via OAuth provider (GitHub)
    */
-  async validateOAuthLogin({ provider, providerId, username, email, photo, accessToken }: {
+  async validateOAuthLogin({
+    provider,
+    providerId,
+    username,
+    email,
+    photo,
+    accessToken,
+  }: {
     provider: string;
     providerId: string;
     username: string;
@@ -24,16 +31,29 @@ export class AuthService {
     accessToken?: string;
   }) {
     // Try to find user by email or username
-    let user = email ? await this.userService.findByEmailOrUsername(email) : null;
+    let user = email
+      ? await this.userService.findByEmailOrUsername(email)
+      : null;
 
     // If still not found, create new user
     if (!user) {
-      user = await this.userService.create({
-        username: username || provider + '_' + providerId,
-        email: email || `${providerId}@${provider}.oauth`,
-        password: providerId, // Not used, just a placeholder
-        image: photo,
-      });
+      // try if username is already taken
+      try {
+        user = await this.userService.create({
+          username: username || provider + '_' + providerId,
+          email: email || `${providerId}@${provider}.oauth`,
+          password: providerId, // Not used, just a placeholder
+          image: photo,
+        });
+      } catch (error) {
+        user = await this.userService.create({
+          username: provider + '_' + providerId,
+          email: email || `${providerId}@${provider}.oauth`,
+          password: providerId, // Not used, just a placeholder
+          image: photo,
+        });
+      }
+
       if (!user) {
         throw new Error('User not found');
       }
@@ -64,12 +84,15 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findByEmailOrUsername(email);
-    
+
     if (!user) {
       return null;
     }
 
-    const isPasswordValid = await this.comparePassword(user.password ?? '', password);
+    const isPasswordValid = await this.comparePassword(
+      user.password ?? '',
+      password,
+    );
     if (!isPasswordValid) {
       return null;
     }
@@ -80,7 +103,7 @@ export class AuthService {
 
   async signIn(email: string, password: string): Promise<any> {
     const user = await this.validateUser(email, password);
-    
+
     if (!user) {
       throw new UnauthorizedException();
     }
