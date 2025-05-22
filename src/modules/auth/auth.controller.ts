@@ -71,7 +71,7 @@ export class AuthController {
     }
 
     // set cookie
-    res.cookie('access_token', req.user.access_token, {
+    res.cookie('token', req.user.access_token, {
       maxAge: 4 * 60 * 60 * 1000,
       httpOnly: false,
       secure: false,
