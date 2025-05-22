@@ -10,7 +10,6 @@ import {
   Req,
   Res,
   HttpStatus,
-  Redirect,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
