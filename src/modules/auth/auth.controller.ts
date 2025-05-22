@@ -28,7 +28,7 @@ export class AuthController {
   @Post('login')
   async signIn(@Body(new ZodValidationPipe(loginSchema)) loginDto: LoginDto) {
     console.log(loginDto);
-    
+
     const data = await this.authService.signIn(
       loginDto.email,
       loginDto.password,
@@ -66,11 +66,23 @@ export class AuthController {
     // Successful authentication, issue JWT and return user info
     // req.user is set by GithubStrategy.validate()
     if (!req.user) {
-      return res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'GitHub authentication failed' });
+      return res
+        .status(HttpStatus.UNAUTHORIZED)
+        .json({ success: false, message: 'GitHub authentication failed' });
     }
+
+    // set cookie
+    res.cookie('access_token', req.user.access_token, {
+      maxAge: 4 * 60 * 60 * 1000,
+      httpOnly: false,
+      secure: false,
+      sameSite: 'lax',
+      domain: '.pilput.me',
+    });
+
     // You can customize the redirect or response as needed:
     // For API: return JWT and user info
-    return Redirect("https://pilput.me");
+    return Redirect('https://pilput.me');
   }
 
   @UseGuards(JwtAuthGuard)
