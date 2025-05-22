@@ -219,8 +219,6 @@ export class ChatService {
           temperature: options.temperature,
         },
       );
-
-      console.log(response);
       
       const aiMessage = response.choices[0]?.message;
       const usage = response.usage;

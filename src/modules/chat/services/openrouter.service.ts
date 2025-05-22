@@ -2,6 +2,8 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, Observable } from 'rxjs';
+import OpenAI from 'openai';
+import type { Stream } from 'openai/streaming';
 import {
   OpenRouterMessage,
   OpenRouterRequest,
@@ -30,55 +32,47 @@ export class OpenRouterService {
       maxTokens?: number;
     } = {},
   ): Observable<string> {
-    const { model = this.config.defaultModel, temperature = this.config.temperature, maxTokens = this.config.maxTokens } = options;
-    const data: OpenRouterRequest = {
-      model,
-      messages,
-      temperature,
-      max_tokens: maxTokens,
-      stream: true,
-    };
-    // Use Axios directly for stream support
-    const axios = this.httpService.axiosRef;
-    return new Observable<string>(observer => {
-      axios.post(`${this.config.baseUrl}/chat/completions`, data, {
-        headers: {
-          Authorization: `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        responseType: 'stream',
-      })
-      .then(response => {
-        const stream = response.data;
-        let buffer = '';
-        stream.on('data', (chunk: Buffer) => {
-          buffer += chunk.toString('utf8');
-          let lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-          for (const line of lines) {
-            const trimmed = line.trim();
-            if (trimmed.startsWith('data:')) {
-              const jsonStr = trimmed.replace(/^data:/, '').trim();
-              if (jsonStr === '[DONE]') {
-                observer.complete();
-                return;
-              }
-              try {
-                const parsed = JSON.parse(jsonStr);
-                const content = parsed.choices?.[0]?.delta?.content;
-                if (content) {
-                  observer.next(content);
-                }
-              } catch (err) {
-                // Ignore parse errors for incomplete chunks
-              }
+    const {
+      model = this.config.defaultModel,
+      temperature = this.config.temperature,
+      maxTokens = this.config.maxTokens,
+    } = options;
+
+    // Map OpenRouterMessage to OpenAI message format if needed
+    const openaiMessages = messages.map((msg) => ({
+      role: msg.role,
+      content: msg.content,
+    }));
+
+    // Initialize OpenAI client if not already
+    const openai = new OpenAI({
+      apiKey: this.config.apiKey,
+      baseURL: this.config.baseUrl,
+    });
+
+    return new Observable<string>((observer) => {
+      (async () => {
+        try {
+          const stream: Stream<OpenAI.Chat.Completions.ChatCompletionChunk> =
+            await openai.chat.completions.create({
+              model,
+              messages: openaiMessages,
+              temperature,
+              max_tokens: maxTokens,
+              stream: true,
+            });
+
+          for await (const chunk of stream) {
+            const content = chunk.choices?.[0]?.delta?.content;
+            if (content) {
+              observer.next(content);
             }
           }
-        });
-        stream.on('end', () => observer.complete());
-        stream.on('error', err => observer.error(err));
-      })
-      .catch(err => observer.error(err));
+          observer.complete();
+        } catch (err) {
+          observer.error(err);
+        }
+      })();
     });
   }
   private readonly logger = new Logger(OpenRouterService.name);
