@@ -57,7 +57,7 @@ export class UserRepository {
         first_name: true,
         last_name: true,
         is_super_admin: true,
-        profiles: true,
+        profile: true,
       },
     });
   }

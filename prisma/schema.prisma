@@ -54,7 +54,7 @@ model users {
   likes              likes[]
   post_comments      post_comments[]
   posts              posts[]
-  profiles           profiles?
+  profile           profiles?
   workspaces         workspaces[]         @relation("workspaces")
   workspace_users    workspace_users[]    @relation(map: "workspace_users_user_id_users_id_fk")
   chat_conversations chat_conversations[]
