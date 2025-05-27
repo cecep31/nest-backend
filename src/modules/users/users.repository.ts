@@ -4,7 +4,7 @@ import { Prisma, users } from '../../../generated/prisma';
 
 @Injectable()
 export class UserRepository {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.usersCreateInput): Promise<users> {
     return this.prisma.users.create({ data });
@@ -35,9 +35,7 @@ export class UserRepository {
     });
   }
 
-  async findByUsernameOrEmail(
-    usernameOrEmail: string,
-  ): Promise<users | null> {
+  async findByUsernameOrEmail(usernameOrEmail: string): Promise<users | null> {
     return this.prisma.users.findFirst({
       where: {
         OR: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
@@ -59,6 +57,7 @@ export class UserRepository {
         first_name: true,
         last_name: true,
         is_super_admin: true,
+        profiles: true,
       },
     });
   }
@@ -92,7 +91,6 @@ export class UserRepository {
   async getAllUsersCount(where?: Prisma.usersWhereInput): Promise<number> {
     return this.prisma.users.count({ where });
   }
-
 
   async delete(where: Prisma.usersWhereUniqueInput): Promise<users> {
     return this.prisma.users.delete({ where });
