@@ -57,7 +57,15 @@ export class UserRepository {
         first_name: true,
         last_name: true,
         is_super_admin: true,
-        profile: true,
+        profile: {
+          select: {
+            id: true,
+            bio: true,
+            website: true,
+            phone: true,
+            location: true,
+          },
+        },
       },
     });
   }
