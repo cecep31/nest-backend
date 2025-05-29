@@ -24,7 +24,7 @@ import { CreateConversationDto, createConversationSchema } from './dto/create-co
 import { SendMessageDto, sendMessageSchema } from './dto/send-message.dto';
 import { ConversationResponseDto } from './dto/conversation-response.dto';
 import { MessageResponseDto } from './dto/conversation-response.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 
 import { Sse } from '@nestjs/common';
 import { map } from 'rxjs/operators';
