@@ -1,14 +1,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 import {
   OpenRouterMessage,
-  OpenRouterRequest,
   OpenRouterResponse,
-  OpenRouterErrorResponse,
 } from '../interfaces/openrouter.types';
 
 interface OpenRouterConfig {
@@ -21,9 +18,31 @@ interface OpenRouterConfig {
 
 @Injectable()
 export class OpenRouterService {
+  private client: OpenAI;
   /**
    * Stream chat completion from OpenRouter as Observable<string> (each chunk is a partial message)
    */
+
+  private readonly logger = new Logger(OpenRouterService.name);
+  private readonly config: OpenRouterConfig;
+
+  constructor(
+    @Inject(ConfigService)
+    private readonly configService: ConfigService,
+  ) {
+    this.config = this.configService.get<OpenRouterConfig>('openrouter', {
+      apiKey: '',
+      baseUrl: 'https://openrouter.ai/api/v1',
+      defaultModel: 'openai/gpt-3.5-turbo',
+      maxTokens: 4000,
+      temperature: 0.7,
+    });
+    this.client = new OpenAI({
+      apiKey: this.config.apiKey,
+      baseURL: this.config.baseUrl,
+    });
+  }
+
   createChatCompletionStream(
     messages: OpenRouterMessage[],
     options: {
@@ -38,25 +57,18 @@ export class OpenRouterService {
       maxTokens = this.config.maxTokens,
     } = options;
 
-    // Map OpenRouterMessage to OpenAI message format if needed
-    const openaiMessages = messages.map((msg) => ({
+    const clientMessages = messages.map((msg) => ({
       role: msg.role,
       content: msg.content,
     }));
-
-    // Initialize OpenAI client if not already
-    const openai = new OpenAI({
-      apiKey: this.config.apiKey,
-      baseURL: this.config.baseUrl,
-    });
 
     return new Observable<string>((observer) => {
       (async () => {
         try {
           const stream: Stream<OpenAI.Chat.Completions.ChatCompletionChunk> =
-            await openai.chat.completions.create({
+            await this.client.chat.completions.create({
               model,
-              messages: openaiMessages,
+              messages: clientMessages,
               temperature,
               max_tokens: maxTokens,
               stream: true,
@@ -75,22 +87,6 @@ export class OpenRouterService {
       })();
     });
   }
-  private readonly logger = new Logger(OpenRouterService.name);
-  private readonly config: OpenRouterConfig;
-
-  constructor(
-    @Inject(ConfigService)
-    private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
-  ) {
-    this.config = this.configService.get<OpenRouterConfig>('openrouter', {
-      apiKey: '',
-      baseUrl: 'https://openrouter.ai/api/v1',
-      defaultModel: 'openai/gpt-3.5-turbo',
-      maxTokens: 4000,
-      temperature: 0.7,
-    });
-  }
 
   async createChatCompletion(
     messages: OpenRouterMessage[],
@@ -106,39 +102,26 @@ export class OpenRouterService {
       maxTokens = this.config.maxTokens,
     } = options;
 
-    const data: OpenRouterRequest = {
-      model,
-      messages,
-      temperature,
-      max_tokens: maxTokens,
-    };
+    // Map to OpenAI-compatible message format
+    const clientMessages = messages.map((msg) => ({
+      role: msg.role,
+      content: msg.content,
+    }));
 
     try {
-      const response = await firstValueFrom(
-        this.httpService.post<OpenRouterResponse>(
-          `${this.config.baseUrl}/chat/completions`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${this.config.apiKey}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        ),
-      );
-
-      return response.data;
+      const completion = await this.client.chat.completions.create({
+        model,
+        messages: clientMessages,
+        temperature,
+        max_tokens: maxTokens,
+      });
+      return completion as OpenRouterResponse;
     } catch (error: any) {
-      this.logger.error('Error calling OpenRouter API:', error);
-
-      if (error.response?.data) {
-        const errorData = error.response.data as OpenRouterErrorResponse;
-        throw new Error(
-          `OpenRouter API error: ${errorData.error?.message || 'Unknown error'}`,
-        );
+      this.logger.error('Error calling chat completion endpoint:', error);
+      if (error.error) {
+        throw new Error(`API error: ${error.error.message || 'Unknown error'}`);
       }
-
-      throw new Error('Failed to get response from OpenRouter API');
+      throw new Error('Failed to get response from chat completion endpoint');
     }
   }
 }
