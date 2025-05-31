@@ -1,0 +1,21 @@
+# fly.toml app configuration file generated for nestbackend-misty-dew-6296 on 2025-05-31T08:57:42+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'nestbackend-misty-dew-6296'
+primary_region = 'sin'
+
+[build]
+  image = "nest-backend:latest"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  size = 'shared-cpu-1x'

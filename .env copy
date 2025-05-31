@@ -1,0 +1,40 @@
+PORT=3001
+
+# primary db
+
+# DATABASE_URL="postgresql://postgres:DecaFcfG55FGdGdB1B5gE1a3ABGf-B3A@monorail.proxy.rlwy.net:21229/pilput_db"
+# DATABASE_URL="postgres://pilput:Zf9iGQw0RMgk@ep-silent-bonus-a1uuhc7q.ap-southeast-1.pg.koyeb.app/pilput_db"
+# DATABASE_URL="postgresql://pilput:WPzUeFVJn95q@ep-calm-hall-396375.ap-southeast-1.aws.neon.tech/pilput_db?sslmode=require"
+# DATABASE_URL="postgresql://cecepjanuardi31:DQc5hOt1AXTn@ep-twilight-frost-a1hvcjjm.ap-southeast-1.aws.neon.tech/pilput_db?sslmode=require"
+
+DATABASE_URL="postgresql://neondb_owner:9aiIzZdYA7Gc@ep-lively-sea-a1qutbes-pooler.ap-southeast-1.aws.neon.tech/pilput?sslmode=require"
+
+# DATABASE_URL="postgres://postgres:DTUTgaqSxaohpEiRaqawSxRpPUFfNxUJ@turntable.proxy.rlwy.net:20276/railway?sslmode=prefer"
+# DATABASE_URL="postgres://pilput-admin:npg_93ieUMquJZSP@ep-dawn-forest-a1ha6bcg.ap-southeast-1.pg.koyeb.app/koyebdb?sslmode=require&pgbouncer=true&connect_timeout=10"
+# DATABASE_URL="postgresql://pilput:pilput31@localhost:5432/pilput_db"
+# DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMzk4ODhkOTAtZmI1NS00NzMxLTk5YTAtM2M3YjQwZTc5Yjc0IiwidGVuYW50X2lkIjoiMTYyNTZkNWZkNzY4MTI5ODdkNDA1YmNmMTQ3ZjIwNmFjZTc2MjJkNjIxY2M5M2FjMTAxYzQ2ZjllM2QwMzNhYyIsImludGVybmFsX3NlY3JldCI6IjZlZGViMjA1LWUxMmItNGYxMC1iMWZiLTljNGZjMzM1YWU2MiJ9.0hRHeIf2ftADI2RVE43_2pYcKJlG7lHxRhrqhS6Dwp8"
+
+
+JWT_SECRET="8c4f7e4a8bfbb6a9983e23hgb21e1625ffdb6e64f4a5d7db54e95a7f59sj3784610bce2099fcd1c07a2o94b11a9de52e2a728"
+# JWT_SECRET="temp"
+
+# This was inserted by `prisma init`:
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+REDIS_HOST="rediss://default:AbmcAAIjcDFlNTkxOWNhYzQ3MTE0OGMyOTUyYTg3MzY1ZTVjNTY1NXAxMA@funny-anemone-47516.upstash.io:6379"
+REDIS_PORT=6379
+
+
+OPENROUTER_API_KEY="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"
+OPENROUTER_BASE_URL="https://openrouter.ai/api/v1"
+OPENROUTER_DEFAULT_MODEL="meta-llama/llama-3.3-8b-instruct:free"
+OPENROUTER_MAX_TOKENS=4000
+OPENROUTER_TEMPERATURE=0.7
+
+GITHUB_CLIENT_ID="Ov23liyOGKlg5DIZl10i"
+GITHUB_CLIENT_SECRET="f747a89a7ba5d44e1814569229fedd847a307a64"
+GITHUB_CALLBACK_URL="https://api.pilput.me/v1/auth/github/callback"
+
