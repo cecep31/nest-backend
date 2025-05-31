@@ -7,14 +7,14 @@ app = 'nestbackend-misty-dew-6296'
 primary_region = 'sin'
 
 [build]
-  image = "nest-backend:latest"
+  image = "cecep31/nestbackend"
 
 [http_service]
   internal_port = 3001
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ['app']
 
 [[vm]]
