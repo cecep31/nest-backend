@@ -1,13 +1,13 @@
-# fly.toml app configuration file generated for nestbackend-misty-dew-6296 on 2025-05-31T08:57:42+07:00
+# fly.toml app configuration file generated for pilput-nestbackend on 2025-05-31T09:28:56+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'nestbackend'
+app = 'pilput-nestbackend'
 primary_region = 'sin'
 
 [build]
-  image = "cecep31/nestbackend"
+  image = 'cecep31/nestbackend'
 
 [http_service]
   internal_port = 3001

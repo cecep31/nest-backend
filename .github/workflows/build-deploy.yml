@@ -1,40 +1,66 @@
-# See https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
-
+# GitHub Actions workflow for building Docker image and deploying to Fly.io
+# Reference: https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
+# This workflow will run on every push to the 'main' branch
 name: Fly Deploy
+
+# Define when the workflow should trigger
 on:
   push:
     branches:
       - main
+
+# Define the jobs to be executed
 jobs:
+  # Job to build and push Docker image to Docker Hub
   docker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Run on the latest Ubuntu runner
     steps:
-      -
-        name: Set up QEMU
+      # Set up QEMU for multi-architecture builds
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+      
+      # Set up Docker Buildx for building multi-platform images
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Login to Docker Hub
+      
+      # Log in to Docker Hub using credentials from GitHub Secrets
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
+          # Your Docker Hub username
           username: cecep31
+          # Docker Hub access token stored in GitHub Secrets
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+      
+      # Build the Docker image and push it to Docker Hub
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          # Push the image after building
           push: true
+          # Tag the image with 'latest'
           tags: cecep31/nestbackend:latest
+  # Job to deploy the application to Fly.io
   deploy:
+    # This job will only run after the 'docker' job completes successfully
     needs: docker
-    name: Deploy app
+    name: Deploy app to Fly.io
     runs-on: ubuntu-latest
-    concurrency: deploy-group    # optional: ensure only one action runs at a time
+    # Ensure only one deployment runs at a time to prevent conflicts
+    concurrency: deploy-group
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Set up Fly.io CLI (flyctl)
+      - name: Set up Fly.io CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      
+      # Deploy the application to Fly.io using the '--remote-only' flag
+      - name: Deploy to Fly.io
+        run: flyctl deploy --remote-only
         env:
+          # Fly.io API token stored in GitHub Secrets for authentication
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
