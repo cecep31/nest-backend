@@ -40,6 +40,10 @@ export class OpenRouterService {
     this.client = new OpenAI({
       apiKey: this.config.apiKey,
       baseURL: this.config.baseUrl,
+      defaultHeaders: {
+        'HTTP-Referer': 'https://pilput.me', // Optional. Site URL for rankings on openrouter.ai.
+        'X-Title': 'pilput', // Optional. Site title for rankings on openrouter.ai.
+      },
     });
   }
 
